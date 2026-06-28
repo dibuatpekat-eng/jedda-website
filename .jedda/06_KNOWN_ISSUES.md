@@ -6,6 +6,9 @@ Status: First read-only staging audit completed on 2026-06-28.
 
 - VERIFIED: WooCommerce Status displays a security notice recommending update to WooCommerce `10.5.3` or latest. Active WooCommerce version is `9.3.3`.
 - VERIFIED: Action Scheduler notice reports `2335` past-due actions; something may be wrong.
+- VERIFIED: Phase 2 mapping found checkout/order/payment/product behavior spread across WPCode, Code Snippets, parent-theme WooCommerce overrides, WPBakery content, and plugins.
+- VERIFIED: WPCode contains `22` active snippets, and Code Snippets contains `2` active snippets. Several target WooCommerce cart, checkout, order, account, email, product badge, and launch flows.
+- VERIFIED: An inactive launch/waitlist WooCommerce hook snippet contains a hardcoded external service credential. The credential value is intentionally not recorded here.
 - VERIFIED: WordPress Reading Settings has `Discourage search engines from indexing this site` unchecked on staging, and the founder reported an error when attempting to enable it.
 - VERIFIED: `robots.txt` currently blocks all crawlers with `User-agent: *` and `Disallow: /`.
 - VERIFIED: WooCommerce customer emails and admin order emails are enabled on staging.
@@ -26,6 +29,8 @@ Status: First read-only staging audit completed on 2026-06-28.
 - VERIFIED: Theme notice says required plugin `YITH Woocommerce Wishlist` is missing and `Dahz Social Instagram` / `Mailchimp for WP` are inactive.
 - VERIFIED: WPIDE file manager/code editor is active, increasing risk of untracked admin-side code edits.
 - VERIFIED: Code Snippets and WPCode Lite are active, with `46` WPCode posts reported.
+- VERIFIED: Several runtime/development utilities are active even though they are not needed for normal storefront runtime: WPIDE, WP Downgrade, WP Rollback, import/export/demo-import tools, and migration tools.
+- VERIFIED: Multiple invoice/document plugins are active at the same time, creating likely overlap and maintenance risk.
 - VERIFIED: WooCommerce native shipping zones show no active methods; shipping likely depends on Epeken configuration that was not verified.
 - VERIFIED: Terms and conditions page is not set in WooCommerce pages.
 - VERIFIED: Comments moderation count is `93`.

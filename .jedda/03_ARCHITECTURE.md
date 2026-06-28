@@ -1,6 +1,8 @@
 # Architecture
 
-Status: First read-only staging audit completed on 2026-06-28.
+Status: Phase 2 read-only website knowledge mapping completed on 2026-06-28.
+
+Detailed architecture reference: see `11_WEBSITE_KNOWLEDGE_MAP.md`.
 
 ## Platform
 
@@ -78,3 +80,11 @@ Status: First read-only staging audit completed on 2026-06-28.
 - VERIFIED: Active theme includes WooCommerce template overrides.
 - ASSUMPTION: Custom behavior may live in Code Snippets, WPCode, WPIDE-edited files, WPBakery page content, Slider Revolution modules, or parent-theme template overrides.
 
+## Phase 2 Architecture Assessment
+
+- VERIFIED: WPCode contains `31` snippets total: `22` active, `9` inactive, `1` outdated, and `15` trash items.
+- VERIFIED: Code Snippets contains `10` snippets total: `2` active and `8` inactive.
+- VERIFIED: Active snippets and WPCode entries touch checkout, cart, order received, order pay, account orders, product out-of-stock states, preorder badges, YayMail layout, login styling, and a launch/waitlist flow.
+- VERIFIED: A relevant inactive Code Snippets entry connects WooCommerce order status events to a Supabase launch/waitlist flow and contains a hardcoded Supabase anon credential. The credential value is intentionally not recorded in documentation.
+- VERIFIED: Multiple active plugins overlap in PDF invoices, packing slips, shipping labels, code snippets, migration/import utilities, marketing/email tooling, rollback/downgrade tooling, and product labels.
+- ASSUMPTION: The current architecture can support short-term staging/testing, but it should not be treated as clean enough for confident WooCommerce updates or major checkout redesign work until custom code is consolidated and compatibility-tested.
