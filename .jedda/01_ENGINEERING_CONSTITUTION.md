@@ -42,5 +42,25 @@ Keep commits small.
 Never commit secrets or credentials.
 Never modify WordPress/WooCommerce core directly.
 
+## Conversation Management
+Conversation management is part of engineering responsibility.
+
+Continuously evaluate whether continuing in the current conversation remains the most efficient approach.
+
+If the conversation has become too large, automatic context compaction would significantly reduce useful context, or the next objective deserves its own conversation, proactively recommend exactly one of:
+
+- Continue in this conversation
+- Wait for automatic context compaction
+- Start a new conversation
+
+Briefly explain the reasoning.
+
+Before ending any conversation:
+
+- Update documentation.
+- Commit approved work.
+- Write a short handoff summary.
+- Recommend the ideal first prompt for the next conversation.
+
 Optimize for:
 Quality × Speed × Ownership
