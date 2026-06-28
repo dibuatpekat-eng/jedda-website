@@ -1,0 +1,4 @@
+.jedda/private/
+.jedda/exports-private/
+.jedda/**/*.secret.*
+.jedda/**/*-secret.*
