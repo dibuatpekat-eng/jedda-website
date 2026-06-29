@@ -124,7 +124,7 @@ body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide:not(
    ============================================================ */
 
 body.single-product.jedda-pdp-v2 .de-slick-product-arrows {
-	display: none;
+	display: none !important;
 }
 
 /* ============================================================
