@@ -1,60 +1,41 @@
 # Next Action
 
-Status: Gallery V2.1 implemented and QA'd on staging. Awaiting founder approval.
+Status: Milestones 2.8.0 (Reverse Engineering) and 2.8.1 (Architecture) complete. Awaiting founder approval on 6 decisions.
 Last updated: 2026-06-29.
 
-## Current Situation
+## Decisions Required Now (Founder)
 
-Gallery V2.1 is live on staging (beta.jeddawear.com/product/kiro-vest/):
-- Wrapper expanded to full viewport width ✓
-- Image: 817px = 54.0% of 1512px viewport ✓
-- Thumbnail strip: right side, 12px indicator ✓
-- Arrows: hidden (display: none !important) ✓
-- Top breathing room: 75.6px at 1512px ✓
-- Related Products: unaffected ✓
-- Mobile: unaffected (Foundation stacks at ≤768px) ✓
+Six decisions must be made before Milestone 2.8.2 (implementation) can begin:
 
-LiteSpeed cache issue resolved: CSS renamed to `pdp-v21.css`, exclusion filter added to plugin.
+| # | Question | Options | Recommendation |
+|---|---|---|---|
+| 1 | Data architecture for accordion content | ACF Pro / Meta Box / keep post_excerpt | **ACF Pro** |
+| 2 | Typography direction | Cormorant Garamond + Inter / Plus Jakarta Sans / licensed fonts | **Cormorant Garamond + Inter** |
+| 3 | Shipping & Returns storage | Per-product copy-paste (current) / ACF Options Page (global) | **ACF Options Page** |
+| 4 | Material composition | ACF text field / WC product attribute `pa_material` | **WC attribute** |
+| 5 | WPCode #11836 "Untitled Snippet" | Review in WPCode admin — name it, document it, or deactivate | **Review before V2** |
+| 6 | What post_excerpt becomes | Empty / plain-text marketing blurb for SEO/social | **Marketing blurb** |
 
-## Immediate Next Step
+See full architecture rationale: `.jedda/34_PRODUCT_SUMMARY_V2_ARCHITECTURE.md`
 
-**Founder reviews Gallery V2.1 against Toteme / SSSTEIN direction.**
+## After Approval → Milestone 2.8.2 (Foundation)
 
-URL to review: https://beta.jeddawear.com/product/kiro-vest/
+No visual changes. Infrastructure only:
+1. Install / activate ACF Pro on staging
+2. Define field groups in JSON (version-controllable)
+3. Create ACF Options Page "Jedda Policy"
+4. Add Cormorant Garamond + Inter font files to `jedda-commerce-ui/assets/fonts/`
+5. Register font preloads in plugin PHP
 
-Hard refresh (Ctrl+Shift+R) if CSS looks stale.
+Staging remains unchanged. Editors can start filling in product fields once ACF is live.
 
-Three scenarios:
-1. **Approved** → move to Product Summary component
-2. **Needs adjustment** → propose specific V2.2 changes
-3. **Too aggressive** → roll back to V2.0 (set `jedda_pdp_v2_enabled=0` or deactivate plugin)
+## Milestone Order Going Forward
 
-## After Gallery Approval
-
-Move to Product Summary component:
-- Title & price hierarchy
-- Buy panel spacing
-- Variant selector presentation
-- Tab/accordion spacing
-
-## PDP V2 Component Order
-
-1. Gallery ← V2.1 implemented, awaiting founder approval
-2. Product Summary
-3. Title & Price
-4. Variant Selector
-5. Add-to-Cart
-6. Product Details / Accordion
-7. Recommendations
-8. Mobile
-
-Each component requires approval before the next begins.
-
-## LiteSpeed Cache Note
-
-LiteSpeed CSS optimization was caching old CSS bundles indefinitely.
-**Fixed by:**
-- Renaming CSS to `pdp-v21.css` (new filename = no cached entry)
-- Adding `litespeed_optimize_css_excludes` filter in plugin PHP
-
-For future CSS changes: rename the file (e.g., `pdp-v22.css`) when deploying a new milestone to guarantee a fresh cache entry. The exclusion filter prevents LiteSpeed from bundling the file, but a fresh filename is the safest guarantee.
+| Milestone | Name | Status |
+|---|---|---|
+| 2.8.0 | Product Summary Reverse Engineering | ✅ Complete |
+| 2.8.1 | Product Summary V2 Architecture | ✅ Complete — awaiting approval |
+| 2.8.2 | Foundation (ACF + fonts) | Blocked on approval |
+| 2.8.3 | Content Migration (1 product) | After 2.8.2 |
+| 2.8.4 | Template + Typography | After 2.8.3 |
+| 2.8.5 | Full Rollout | After 2.8.4 approval |

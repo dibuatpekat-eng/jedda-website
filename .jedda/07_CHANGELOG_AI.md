@@ -2,6 +2,58 @@
 
 Record engineering work chronologically.
 
+## 2026-06-29 — Milestone 2.8.1 — Product Summary V2 Architecture (Claude Code workspace)
+
+Architecture design only. No implementation. No staging changes.
+
+### Data Architecture
+
+Evaluated 6 approaches: ACF Pro, Meta Box, native WC post meta, WC attributes/taxonomies, custom post types, headless. Full comparison matrix in `.jedda/34_PRODUCT_SUMMARY_V2_ARCHITECTURE.md`.
+
+**Recommendation: ACF Pro** as primary data layer.
+- Per-product fields: details text, composition, care instructions, size measurements (repeater), recommended body size (repeater)
+- Global fields: ACF Options Page "Jedda Policy" — Shipping & Returns + Pre-Order policy (edit once, reflects everywhere)
+- Material composition: WC product attribute `pa_material` (categorical complement to ACF)
+- `post_excerpt` freed for plain-text marketing blurb
+
+Rejected: native meta (no editor UI), CPTs (over-engineering), headless (out of scope for this phase).
+
+### Typography
+
+Evaluated: Cormorant Garamond + Inter, Plus Jakarta Sans (single typeface), GT Sectra + Neue Haas Grotesk (licensed), Editorial New + Inter. Benchmarked against Toteme, SSSTEIN, The Row, Aesop, COS, A.P.C., Jacquemus, Lemaire.
+
+**Recommendation: Cormorant Garamond 300 (display, product name) + Inter 400/500 (all UI)**
+- Both free via Google Fonts, self-hostable, no GDPR/licensing concerns
+- Cormorant at 22–24px: editorial serif warmth → signals craft and fashion-object quality
+- Inter at 11–13px: precise, legible, industry-standard for premium digital products
+- Retire Overpass (road-signage grotesque, wrong register) and Jost (implementation artifact from per-product HTML, never a deliberate brand decision)
+
+Alternative: Plus Jakarta Sans (single typeface, Indonesian foundry — appropriate brand heritage signal for JEDDA)
+
+### Migration Strategy
+
+5-phase plan documented:
+- Phase 1: ACF install + font infrastructure (no visual changes)
+- Phase 2: Content migration for 1 product
+- Phase 3: Template rendering from ACF fields
+- Phase 4: Typography
+- Phase 5: Full product rollout
+
+Feature flag (`jedda_pdp_v2_enabled`) active throughout. `post_excerpt` content preserved as fallback until Phase 5.
+
+### Blockers / Decisions Required
+
+6 decisions documented in `.jedda/98_NEXT_ACTION.md`. Awaiting founder input before Milestone 2.8.2 begins.
+
+Environment blocker: WPCode snippet #11836 "Untitled Snippet" — content not inspected, PDP impact unknown. Must be reviewed before V2 implementation.
+
+### Files Created
+
+- `.jedda/33_PRODUCT_SUMMARY_REVERSE_ENGINEERING.md` — Milestone 2.8.0 complete report
+- `.jedda/34_PRODUCT_SUMMARY_V2_ARCHITECTURE.md` — Milestone 2.8.1 complete report
+
+---
+
 ## 2026-06-29 — Gallery V2.1 — Stronger Editorial Option (Claude Code workspace)
 
 ### Changes Implemented

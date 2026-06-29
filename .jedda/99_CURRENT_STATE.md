@@ -124,17 +124,56 @@ PDP V2 component-by-component through `jedda-commerce-ui`:
 
 Each component requires: reverse engineering → implementation → screenshots → approval before next.
 
+## Product Summary — Reverse Engineering + Architecture (Complete, Awaiting Approval)
+
+Milestones 2.8.0 and 2.8.1 complete. Full docs: `.jedda/33_PRODUCT_SUMMARY_REVERSE_ENGINEERING.md` and `.jedda/34_PRODUCT_SUMMARY_V2_ARCHITECTURE.md`.
+
+### Key Reverse Engineering Findings (2.8.0)
+
+- Summary column: `.de-product-single__summary--philo.large-5` (605px @ 1512px viewport)
+- Title: `h2.product_title` — Overpass 16px/400 — data: `wp_posts.post_title`
+- Price: inside `h4` (semantically incorrect) — Overpass 12px — WC `_price` meta. Schema.org tags hidden inside (must preserve)
+- Accordion: CSS (35 rules) + HTML (4 items) + JS (`jdToggle()`) all hardcoded in `post_excerpt`. Not CMS-friendly. Non-technical editors cannot update without HTML knowledge.
+- Variation form: WooCommerce core + woo-variation-swatches plugin. Labels styled by WPCode #13040 (Jost 11px)
+- Two typefaces on one panel: Overpass (title/price) vs Jost (accordion/labels) — never a deliberate decision
+- WPCode #11836 "Untitled Snippet" runs `site_wide_header` — PDP impact unknown. Must review before V2
+- Sprint 2 snippets (#13, #18, #19) active — must be preserved through V2
+- Buy Now: Upscale `.de-single-direct-checkout`, WPCode #13041 adds sold-out guard
+
+### Architecture Recommendation (2.8.1)
+
+**Data layer:** ACF Pro
+- Per-product structured fields: details text, composition, care, size measurements (repeater), recommended body size (repeater)
+- Global policy: ACF Options Page "Jedda Policy" — Shipping & Returns, Pre-Order, Returns — edit once, reflect on all products
+- Material composition: WC attribute `pa_material` (categorical, filterable)
+- `post_excerpt` freed for plain-text marketing blurb
+
+**Typography:** Cormorant Garamond (display) + Inter (UI) — both free, self-hosted
+- Cormorant Garamond 300 → product name 22–24px (editorial serif)
+- Inter 400/500 → price, labels, measurements, accordion body
+- Retire Overpass and Jost entirely
+
+**Migration:** 5 phases — Foundation → Content Migration (1 product) → Template → Typography → Rollout. Feature flag active throughout. `post_excerpt` not deleted until Phase 5 approved.
+
+### Decisions Required from Founder
+
+| # | Decision | Recommendation |
+|---|---|---|
+| 1 | Data architecture | ACF Pro |
+| 2 | Typography | Cormorant Garamond + Inter (or Plus Jakarta Sans if single-typeface) |
+| 3 | Shipping & Returns | ACF Options Page (global) |
+| 4 | Material composition | WC attribute `pa_material` |
+| 5 | WPCode #11836 | Review + name before V2 |
+| 6 | Post excerpt | Plain-text marketing blurb |
+
 ## Current Risks
 
-- Gallery V2 not yet visually confirmed on staging (plugin inactive).
-- Thumbnail-at-12px approach is aggressive — fallback to 64px documented if needed.
 - Browser/CDP sessions have sometimes been unstable on staging.
 - Checkout/order/payment flows are not safe to test casually.
-- Code Snippets/WPCode still create hidden dependency risk.
+- WPCode #11836 unnamed — unknown PDP impact.
 - PHP lint unavailable in local environment.
 
 ## Immediate Next Step
 
-Activate Gallery V2 on staging for visual QA.
-Founder reviews against Toteme / SSSTEIN direction.
-Approve or adjust before proceeding to Product Summary.
+Founder reviews and approves/redirects architecture decisions above.
+After approval → Milestone 2.8.2 (ACF install + font infrastructure, no visual changes yet).
