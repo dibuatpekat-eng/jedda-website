@@ -31,6 +31,45 @@ Finished means:
 Review every UI like an extremely detail-oriented premium customer.
 Notice typography, spacing, alignment, hierarchy, transitions, loading, responsiveness and checkout friction.
 
+## Component Reverse Engineering
+Before every component sprint, reverse-engineer the component before modifying it.
+
+Do not patch visual or interaction issues blindly. First identify every layer that builds the component, then choose the cleanest layer to fix it.
+
+For each component, map the relevant ownership layers:
+
+- Theme.
+- WooCommerce templates.
+- WPBakery / page builder.
+- Product short description.
+- Product long description.
+- Custom CSS.
+- Custom JS.
+- WPCode snippets.
+- Code Snippets.
+- WooCommerce hooks.
+- Plugin output.
+- Dynamic product data.
+- Taxonomies / attributes.
+- Related products / recommendations logic.
+
+For product page work, specifically map:
+
+- Gallery.
+- Product title.
+- Price.
+- Short description.
+- Size / variant selector.
+- Add to cart.
+- Out of stock / preorder states.
+- Accordion / tabs.
+- Product description.
+- Recommendations / related products.
+- Mobile layout.
+- Interaction logic.
+
+Only after this map exists should implementation start.
+
 ## Time
 Estimate scope first.
 Small: ~5 min

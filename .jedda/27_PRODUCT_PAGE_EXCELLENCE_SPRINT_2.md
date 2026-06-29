@@ -4,6 +4,29 @@ Status: Recovery checkpoint.
 Date: 2026-06-29
 Scope: Staging product detail page only.
 
+## Permanent Method Update
+
+Every component sprint now starts with Component Reverse Engineering.
+
+Before modifying a component, identify the layers that build it:
+
+- Theme.
+- WooCommerce templates.
+- WPBakery / page builder.
+- Product short description.
+- Product long description.
+- Custom CSS.
+- Custom JS.
+- WPCode snippets.
+- Code Snippets.
+- WooCommerce hooks.
+- Plugin output.
+- Dynamic product data.
+- Taxonomies / attributes.
+- Related products / recommendations logic.
+
+If something looks or behaves poorly, first identify where it comes from. Then choose the cleanest layer to fix it.
+
 ## Current Outcome
 
 Sprint 2 started with the correct target: fix the product page as a complete conversion component, beginning with the critical invalid add-to-cart interaction documented in Phase 7.
@@ -22,6 +45,46 @@ Phase 7 identified the PDP add-to-cart flow as a critical customer journey issue
 - Valid add-to-cart feedback was also too quiet, relying mostly on delayed cart-count change.
 
 For JEDDA, this is a premium trust issue. A product page can be visually strong, but the moment of purchase intent must feel calm, specific, and reassuring.
+
+## Product Page Reverse Engineering
+
+Status: Initial map based on existing `.jedda` documentation and served PDP HTML inspection. A logged-in visual/admin recheck is still required before activating any new snippet.
+
+### Known Platform Layers
+
+| Layer | Product Page Role | Current Understanding | Cleanest Fix Layer |
+| --- | --- | --- | --- |
+| Theme | Owns the base PDP layout, gallery structure, product summary placement, typography defaults, and responsive behavior. | VERIFIED in prior docs: site uses the `Upscale` parent theme. | Avoid parent-theme edits. Use a controlled child theme/custom plugin later; use a temporary staging snippet only for narrowly scoped validation. |
+| WooCommerce templates | Own product title, price, variation form, add-to-cart button, stock messages, tabs, related products, and notices. | VERIFIED in prior docs: WooCommerce is the commerce core and product pages use WooCommerce behavior. | Prefer Woo hooks/templates for durable fixes after source ownership is cleaner. |
+| WPBakery / page builder | Can affect surrounding product content and layout modules. | VERIFIED in prior docs: WPBakery is active in the design/content layer. | Do not use for variant validation logic. |
+| Product short description | Likely feeds summary content near the purchase area. | ASSUMPTION until inspected in product admin. | Content-only edits belong in product data, not JS. |
+| Product long description | Feeds deeper product storytelling/details if enabled in tabs/accordions. | ASSUMPTION until inspected in product admin. | Content-only edits belong in product data, not JS. |
+| Custom CSS | Affects PDP typography, button styling, swatches, accordion/tabs, mobile spacing, and hidden states. | VERIFIED in prior docs: custom CSS exists across admin snippets/theme/page layers. | Use small scoped CSS only when required by the behavior; defer broad visual refinement. |
+| Custom JS | Affects variation, stock, waitlist, badges, checkout/cart fragments, and other dynamic states. | VERIFIED: existing PDP HTML includes older custom JS, including unrelated `MutationObserver` use. | New Sprint 2 fix must be event-based only and must not use `MutationObserver`. |
+| WPCode snippets | Many active snippets influence product, cart, checkout, order, email, and launch flows. | VERIFIED in prior docs: WPCode has many active snippets. | Do not add more WPCode unless Code Snippets/admin path is unavailable and stable. |
+| Code Snippets | Runs PHP/JS snippets from admin. | VERIFIED in prior docs: active Code Snippets exists; Sprint 2 attempted active snippet likely ID `12` was manually deactivated. | Temporary staging-only PDP validation can live here if admin/browser is stable and rollback is clear. |
+| WooCommerce hooks | Provide durable event/action/filter points for notices, add-to-cart, variation form, and product metadata. | VERIFIED by platform behavior; exact hook ownership not yet mapped from theme files. | Best durable destination after snippet consolidation. |
+| Plugin output | Plugins can add swatches, badges, waitlist, direct checkout, labels, cart fragments, analytics, and availability behavior. | VERIFIED in prior docs: plugin stack is layered and includes Woo-related extensions. | Do not alter plugin settings during PDP variant-validation sprint. |
+| Dynamic product data | Product title, price, stock, variations, images, SKU, and attributes drive the PDP. | VERIFIED by WooCommerce product model. | Do not modify product data for this sprint. |
+| Taxonomies / attributes | Color and size are variation attributes that drive required selection. | VERIFIED from Phase 7 behavior. | Validation should read WooCommerce variation select values rather than duplicating product rules. |
+| Related products / recommendations | Woo/theme logic outputs related/recommended products below PDP. | VERIFIED in Phase 7 as present but visually inconsistent. | Out of scope for PDP Variant Validation milestone. |
+
+### Product Page Area Map
+
+| Area | Likely Source Layers | Sprint 2 Decision |
+| --- | --- | --- |
+| Gallery | Theme + WooCommerce product images + lazy-loading/plugin behavior. | Out of scope. Do not touch. |
+| Product title | WooCommerce template + dynamic product data + theme typography. | Out of scope. Do not touch. |
+| Price | WooCommerce template + dynamic product/variation pricing + theme styling. | Out of scope. Do not touch. |
+| Short description | Product short description + WooCommerce summary template + theme styling. | Out of scope. Do not touch. |
+| Size / variant selector | WooCommerce variation form + taxonomy attributes + swatch plugin/theme JS/CSS. | In scope only as read-only inputs for validation. |
+| Add to cart | WooCommerce variation form + theme button styling + WooCommerce JS + custom snippets. | In scope only for preventing invalid stuck loading and showing guidance. |
+| Out of stock / preorder states | WooCommerce stock data + plugin/snippet output + existing custom JS. | Out of scope. Do not touch. |
+| Accordion / tabs | WooCommerce tabs + theme accordion styling/JS + product long description/data. | Out of scope. Do not touch. |
+| Product description | Product long description + WooCommerce tabs/theme content. | Out of scope. Do not touch. |
+| Recommendations / related products | WooCommerce related products + theme carousel/grid + product categories/tags. | Out of scope. Do not touch. |
+| Mobile layout | Theme responsive CSS + Woo templates + plugin/snippet overlays. | Only smoke-test invalid validation if implementation happens. No visual/mobile layout change. |
+| Interaction logic | WooCommerce variation events + theme/plugin scripts + custom WPCode/Code Snippets. | In scope only through a small event-based guard. No observer, no success feedback, no broader polish. |
 
 ## Incident Summary
 
@@ -147,10 +210,27 @@ After the rollback, the in-app logged-in browser session remained unstable:
 - Loading the PDP through the logged-in browser timed out.
 - Loading Code Snippets admin through the logged-in browser also timed out.
 - The browser control session could not list tabs after the hang.
+- On the Sprint 2 continuation check, the browser channel again timed out while listing tabs before any admin or PDP action.
 
 A separate headless Chrome session could run, but unauthenticated traffic reached the browser-check gate instead of the real PDP, so it could not validate customer behavior.
 
 Because the active browser/admin channel was not stable, no replacement snippet was activated in this checkpoint. Activating another frontend snippet without a working test and rollback channel would be unsafe.
+
+## PDP Variant Validation Milestone Status
+
+Status: Not activated.
+
+Reason: The required precondition failed. Admin/browser stability could not be confirmed.
+
+Decision: Stop before implementation. The next implementation remains PDP Variant Validation only:
+
+- One behavior only.
+- Event-based implementation only.
+- No `MutationObserver`.
+- No success feedback.
+- No loading-state redesign.
+- No recommendations logic.
+- No visual refinement beyond the minimum inline validation message required by the behavior.
 
 ## Expected Impact After Next Safe Fix
 
