@@ -2,3 +2,4 @@
 .jedda/exports-private/
 .jedda/**/*.secret.*
 .jedda/**/*-secret.*
+.DS_Store
