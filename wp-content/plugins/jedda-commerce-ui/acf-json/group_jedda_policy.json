@@ -1,0 +1,96 @@
+[
+	{
+		"key": "group_jedda_policy",
+		"title": "Jedda Policy",
+		"fields": [
+			{
+				"key": "field_jedda_shipping_policy",
+				"label": "Shipping Policy",
+				"name": "jedda_shipping_policy",
+				"aria-label": "",
+				"type": "textarea",
+				"instructions": "Shown in the Shipping & Returns accordion on all products. Edit here to update all product pages instantly.",
+				"required": 0,
+				"conditional_logic": 0,
+				"wrapper": { "width": "", "class": "", "id": "" },
+				"default_value": "",
+				"maxlength": "",
+				"rows": 6,
+				"placeholder": "",
+				"new_lines": "br"
+			},
+			{
+				"key": "field_jedda_returns_policy",
+				"label": "Returns & Exchanges",
+				"name": "jedda_returns_policy",
+				"aria-label": "",
+				"type": "textarea",
+				"instructions": "Shown in the Shipping & Returns accordion on all products.",
+				"required": 0,
+				"conditional_logic": 0,
+				"wrapper": { "width": "", "class": "", "id": "" },
+				"default_value": "",
+				"maxlength": "",
+				"rows": 6,
+				"placeholder": "",
+				"new_lines": "br"
+			},
+			{
+				"key": "field_jedda_size_exchange_policy",
+				"label": "Size Exchange After Delivery",
+				"name": "jedda_size_exchange_policy",
+				"aria-label": "",
+				"type": "textarea",
+				"instructions": "Shown below Returns & Exchanges in the Shipping & Returns accordion.",
+				"required": 0,
+				"conditional_logic": 0,
+				"wrapper": { "width": "", "class": "", "id": "" },
+				"default_value": "",
+				"maxlength": "",
+				"rows": 4,
+				"placeholder": "",
+				"new_lines": "br"
+			},
+			{
+				"key": "field_jedda_preorder_policy",
+				"label": "Pre-Order Policy",
+				"name": "jedda_preorder_policy",
+				"aria-label": "",
+				"type": "textarea",
+				"instructions": "Shown only on products tagged \"Pre-Order\". Leave blank if not applicable.",
+				"required": 0,
+				"conditional_logic": 0,
+				"wrapper": { "width": "", "class": "", "id": "" },
+				"default_value": "",
+				"maxlength": "",
+				"rows": 4,
+				"placeholder": "",
+				"new_lines": "br"
+			}
+		],
+		"location": [
+			[
+				{
+					"param": "options_page",
+					"operator": "==",
+					"value": "jedda-policy"
+				}
+			]
+		],
+		"menu_order": 0,
+		"position": "normal",
+		"style": "default",
+		"label_placement": "top",
+		"instruction_placement": "label",
+		"hide_on_screen": [],
+		"active": true,
+		"description": "",
+		"show_in_rest": 0,
+		"acfe_display_title": "",
+		"acfe_autosync": "",
+		"acfe_form": 0,
+		"acfe_meta": "",
+		"acfe_note": "",
+		"modified": 1751270400
+	}
+]

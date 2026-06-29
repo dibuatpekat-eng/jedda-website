@@ -1,31 +1,56 @@
 # Next Action
 
-Status: Milestone 2.8.3 (Foundation) complete. Blocked on owner: ACF Pro purchase.
+Status: Milestone 2.8.4 complete (pending final deploy + content entry). No owner blockers.
 Last updated: 2026-06-30.
 
-## Owner Actions Required (Before 2.8.4 Can Begin)
+## Immediate: Deploy pdp-v24.css Revision (Engineer)
 
-### 1. Purchase ACF Pro — BLOCKING
-URL: advancedcustomfields.com  
-Cost: ~$49/yr  
-Why: Repeater field (size measurement tables) and Options Page (global policy) require Pro.  
-Install on staging only. Do not install on main site yet.
+SSH to 77.37.81.144 timed out during the 2.8.4 session. The CSS file (`pdp-v24.css`) was revised locally to fix the opacity issue (0.42 → 0.6 + box-shadow active indicator) but not yet pushed to server.
 
-### 2. Review WPCode #11836 "Untitled Snippet" — BLOCKING
+Steps:
+1. SCP `pdp-v24.css` to staging server (use SCP+tar, not SSH heredoc)
+2. Clear LiteSpeed CSS cache on staging
+3. Hard refresh browser, verify thumbnail strip is visible at 0.6 opacity
+4. Verify active thumbnail has inset left box-shadow indicator
+
+## Owner Actions Required (Content Entry)
+
+### 1. Enter Kiro Cropped Vest product data in WP Admin
+
+Go to: WP Admin → Products → Kiro Cropped Vest → Edit → scroll to "Jedda Product Data" meta box
+
+Fill:
+- **Details** (textarea): Product description for the DETAILS accordion (plain text, no HTML)
+- **Composition** (text): e.g. `100% Viscose` or `Shell: 100% Linen, Lining: 100% Polyester`
+- **Care Instructions** (textarea): One instruction per line (e.g. `Dry clean only`, `Do not bleach`)
+- **Garment Measurements** (repeater): One row per size option (S/M, L/XL). Columns: Size, Bust (cm), Shoulder (cm), Front (cm), Back (cm)
+- **Recommended Body Size** (repeater): One row per size option. Columns: Size, Bust up to (cm), Height (cm)
+
+### 2. Enter global policy text in WP Admin
+
+Go to: WP Admin → WooCommerce → Jedda Policy
+
+Fill:
+- **Shipping Policy**: Delivery times, courier, free shipping threshold
+- **Returns & Exchanges**: Return window, condition requirements
+- **Size Exchange After Delivery**: Specific size exchange terms
+- **Pre-Order Policy**: Pre-order lead time, payment terms (leave blank if no pre-order products currently)
+
+### 3. Rename WPCode #11836 (low priority)
+
 Go to: WP Admin → WPCode → Snippets → find snippet ID 11836  
-Action: Read its content, name it, and document its purpose in a reply.  
-Why: Unknown snippet runs on every page including PDP. Must be understood before V2 overrides any element it may be affecting.
+Rename to: `My Account: Remove Payment Request Text`
 
-## Next Milestone → 2.8.4 (Content Migration)
+## Next Milestone → 2.8.5 (Template + Typography)
 
-Blocked on ACF Pro. Once installed:
+Ready after content is entered in WP Admin.
 
-1. Activate ACF Pro on staging
-2. Uncomment ACF field group in `class-acf-fields.php` and activate
-3. Uncomment ACF Options Page in `class-acf-options.php` and activate
-4. Fill all 4 ACF fields for Kiro Cropped Vest in WP Admin → Products
-5. Fill Jedda Policy global fields in WP Admin → Jedda Policy
-6. Verify data is readable via `get_field()` in PHP
+Scope:
+1. PHP template to render ACF fields inside accordions (details, composition, care, measurements, policy)
+2. Plus Jakarta Sans applied to product title, price, labels, accordion, body
+3. Accordion moved below ATC buttons (DETAILS/FIT & SIZING/MATERIAL & CARE/SHIPPING & RETURNS)
+4. Multi-open accordion (all closed by default)
+5. Interaction layer redesign: color/size/qty/ATC/Buy Now/hover/active/disabled/loading/success/validation/focus/transitions
 
 ## Full Milestone Sequence
 
@@ -35,6 +60,6 @@ Blocked on ACF Pro. Once installed:
 | 2.8.1 | Architecture | ✅ Complete — approved |
 | 2.8.2 | Blueprint | ✅ Complete — approved |
 | 2.8.3 | Foundation (plugin restructure + fonts + taxonomy + WC filters) | ✅ Complete — deployed |
-| 2.8.4 | Content Migration (1 product to ACF) | Blocked: ACF Pro needed |
-| 2.8.5 | Template + Typography implementation | After 2.8.4 |
+| 2.8.4 | CMS Architecture + Gallery Thumbnail Upgrade | ✅ Complete — pending deploy + content entry |
+| 2.8.5 | Template + Typography + Interaction Layer | After 2.8.4 content entry |
 | 2.8.6 | Full Rollout | After 2.8.5 approval |

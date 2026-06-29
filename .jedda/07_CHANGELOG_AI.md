@@ -2,6 +2,66 @@
 
 Record engineering work chronologically.
 
+## 2026-06-30 — Milestone 2.8.4 — CMS Architecture + Gallery Thumbnail Upgrade (Claude Code workspace)
+
+ACF Pro 6.8.4 integrated via JSON sync. Gallery thumbnail upgraded from 12px indicator to 64px image strip. No changes to main site.
+
+### ACF Pro Integration — JSON Sync Architecture
+
+ACF Pro 6.8.4 was activated on staging. PHP `acf_add_field_group()` caused a site-wide HTTP 200 empty-body fatal error when called from two separate class callbacks (even at different hook priorities). Root cause: a class-level conflict in ACF 6.8.4 with multiple field group registrations in the same PHP request.
+
+**Architecture pivot: JSON sync.** Field groups are defined as JSON files in `acf-json/`. ACF reads them natively — no PHP API surface.
+
+- `class-acf-fields.php` — only adds `acf/settings/load_json` filter pointing to `acf-json/`
+- `class-acf-options.php` — registers "Jedda Policy" options page only. Adds `acf/settings/save_json` filter so GUI field edits sync back to plugin directory.
+- `acf-json/group_jedda_product.json` — per-product fields: `jedda_details_text` (textarea), `jedda_composition` (text), `jedda_care_instructions` (textarea), `jedda_sizes` (repeater: label, bust, shoulder, front_length, back_length), `jedda_rec_sizes` (repeater: label, bust_max, height)
+- `acf-json/group_jedda_policy.json` — options page fields: `jedda_shipping_policy`, `jedda_returns_policy`, `jedda_size_exchange_policy`, `jedda_preorder_policy` (all textarea)
+
+Usage: `get_field('jedda_details_text', $product_id)` / `get_field('jedda_shipping_policy', 'option')`
+
+"Jedda Policy" options page verified in WP Admin under WooCommerce → Jedda Policy. "Jedda Product Data" field group verified on Kiro Cropped Vest edit screen.
+
+### Gallery Thumbnail Upgrade — 12px → 64px Image Strip (pdp-v24.css)
+
+12px indicator strip was neither editorial nor functional (images hidden, only a thin position mark). Replaced with 64px image thumbnails.
+
+**Initial design (opacity-only): discovered and corrected.** 0.42 inactive opacity is near-invisible on white backgrounds with light fashion photography. Corrected to 0.6 inactive / 1.0 active, with a 3px inset left `box-shadow` in `--jedda-ink` as the active indicator. Box-shadow doesn't affect layout or image dimensions. The shadow faces the main image — a directional pointer.
+
+Thumbnail dimensions: 64px × 80px, `object-fit: cover`, `object-position: center top`. Margin between thumbnails: 4px. Hover on inactive: opacity 0.85.
+
+`class-assets.php` updated to enqueue `pdp-v24.css` with `jedda-pdp-v21` as dependency. Added to LiteSpeed CSS excludes list.
+
+### WPCode #11836 Audit
+
+Snippet removes "Request" text nodes from My Account → Subscriptions/Orders page. Zero PDP impact. Caused by Midtrans payment plugin injecting "Request" text into the page — WPCode hides it client-side rather than fixing the root cause. Should be renamed "My Account: Remove Payment Request Text" but is otherwise low-priority technical debt.
+
+### Discovered Blockers During This Milestone
+
+1. **ACF 6.8.4 PHP registration fatal** — two `acf_add_field_group()` calls from separate class callbacks → site-wide crash. Fixed via JSON sync pivot.
+2. **SSH heredoc corrupts PHP files with single quotes** — heredoc via `cat > file << 'EOF'` garbles PHP code. Permanent rule: always use SCP+tar for PHP files.
+3. **0.42 opacity invisible on white backgrounds** — discovered during screenshot review. Corrected to 0.6 + box-shadow approach.
+
+### Staging Verification
+
+Final JS check before commit:
+```json
+{
+  "thumbStripWidth": "64px",
+  "thumbImgCount": 12,
+  "firstImgDims": "62x80",
+  "firstImgDisplay": "block",
+  "activeOpacity": "1",
+  "inactiveOpacity": "0.42",
+  "pdpV24Loaded": true,
+  "titleTag": "H1",
+  "atcLabel": "Add to Bag"
+}
+```
+
+Post-correction deployment pending (SSH timeout during commit session; CSS file updated locally).
+
+---
+
 ## 2026-06-30 — Milestone 2.8.3 — Foundation (Claude Code workspace)
 
 Plugin restructured from single-file to class-based architecture. Fonts added. Infrastructure deployed to staging. No visual changes to existing layout.

@@ -8,6 +8,7 @@
  *   pdp-v21.css = Gallery V2.1
  *   pdp-v22.css = Product Summary V2 (typography tokens, font-face) [superseded]
  *   pdp-v23.css = Product Summary V2 (typography + flex container + sticky)
+ *   pdp-v24.css = Gallery thumbnail upgrade (12px → 64px image strip)
  *
  * @package JeddaCommerceUI
  */
@@ -31,6 +32,7 @@ class Jedda_Assets {
 
 		$css_v21_path = JEDDA_COMMERCE_UI_PATH . 'assets/css/pdp-v21.css';
 		$css_v23_path = JEDDA_COMMERCE_UI_PATH . 'assets/css/pdp-v23.css';
+		$css_v24_path = JEDDA_COMMERCE_UI_PATH . 'assets/css/pdp-v24.css';
 		$js_path      = JEDDA_COMMERCE_UI_PATH . 'assets/js/pdp-v2.js';
 
 		// Gallery V2.1 styles
@@ -47,6 +49,14 @@ class Jedda_Assets {
 			JEDDA_COMMERCE_UI_URL . 'assets/css/pdp-v23.css',
 			array('jedda-pdp-v21'),
 			file_exists($css_v23_path) ? (string) filemtime($css_v23_path) : JEDDA_COMMERCE_UI_VERSION
+		);
+
+		// Gallery thumbnail upgrade (12px → 64px image strip)
+		wp_enqueue_style(
+			'jedda-pdp-v24',
+			JEDDA_COMMERCE_UI_URL . 'assets/css/pdp-v24.css',
+			array('jedda-pdp-v21'),
+			file_exists($css_v24_path) ? (string) filemtime($css_v24_path) : JEDDA_COMMERCE_UI_VERSION
 		);
 
 		// Gallery + interaction JS
@@ -100,6 +110,7 @@ class Jedda_Assets {
 	public static function litespeed_excludes($excludes) {
 		$excludes[] = 'jedda-commerce-ui/assets/css/pdp-v21.css';
 		$excludes[] = 'jedda-commerce-ui/assets/css/pdp-v23.css';
+		$excludes[] = 'jedda-commerce-ui/assets/css/pdp-v24.css';
 		return $excludes;
 	}
 }

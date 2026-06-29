@@ -262,12 +262,41 @@ Completed 2026-06-30. All verified on staging.
 | `--jedda-header-height: 114px` | ✅ |
 | Gallery V2.1 intact | ✅ (847px width, images loading) |
 
+## Milestone 2.8.4 — CMS Architecture + Gallery Upgrade (Complete, Pending Final Deploy)
+
+Completed 2026-06-30. Pending: SSH to 77.37.81.144 timed out mid-session. CSS correction (pdp-v24.css revision) not yet pushed to server. All other files already deployed and verified.
+
+### ACF Pro Integration
+
+- `class-acf-fields.php` — `acf/settings/load_json` filter only, no PHP field registration
+- `class-acf-options.php` — Options Page registration + `acf/settings/save_json` filter
+- `acf-json/group_jedda_product.json` — per-product fields (details, composition, care, 2 repeaters)
+- `acf-json/group_jedda_policy.json` — global policy fields (4 textarea, options page location)
+- WP Admin → WooCommerce → Jedda Policy page: verified ✅
+- WP Admin → Edit Product → Jedda Product Data meta box: verified ✅
+
+### Gallery Thumbnail Upgrade (pdp-v24.css)
+
+12px indicator strip → 64px image thumbnails. Design revised mid-milestone:
+- **First design (0.42 opacity):** near-invisible on white backgrounds with light fashion photography.
+- **Final design:** 0.6 inactive opacity (clearly visible), 1.0 active, 3px inset left `box-shadow` in `--jedda-ink` as active indicator. Faces main image — directional pointer.
+- Images: 64px × 80px, `object-fit: cover`, `object-position: center top`
+- Hover on inactive: 0.85 opacity
+
+### Pending (SSH deploy only)
+
+- `pdp-v24.css` revision (opacity + box-shadow design) not yet on server
+- Content data not yet entered in WP Admin (Kiro Cropped Vest fields + Jedda Policy)
+- Git commit and push for 2.8.4
+
 ## Current Risks
 
-- ACF Pro not yet purchased — blocks content migration phase (2.8.4)
-- WPCode #11836 content unknown — may conflict with V2 elements
+- ~~ACF Pro not yet purchased~~ — RESOLVED: installed and active on staging
+- ~~WPCode #11836 content unknown~~ — RESOLVED: audited (My Account "Request" text remover, zero PDP impact)
+- SSH connectivity intermittent — may cause deploy delays
 
 ## Immediate Next Step
 
-**Owner:** Purchase ACF Pro + review WPCode #11836 (see `.jedda/98_NEXT_ACTION.md`)  
-**Engineer (after ACF Pro installed):** Milestone 2.8.4 — Content Migration
+**Engineer:** Deploy `pdp-v24.css` revision → verify thumbnail strip visually → enter content in WP Admin → commit + push 2.8.4 → proceed to 2.8.5 (Template + Typography)
+
+**Owner action pending:** Enter content in WP Admin for Kiro Cropped Vest (Jedda Product Data fields) and Jedda Policy fields. Also rename WPCode #11836 to "My Account: Remove Payment Request Text".

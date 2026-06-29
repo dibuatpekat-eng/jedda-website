@@ -1,0 +1,73 @@
+/*
+ * JEDDA Commerce UI — Gallery Thumbnail Upgrade
+ * Milestone: 2.8.4
+ *
+ * Upgrades the 12px indicator strip to a 64px image thumbnail rail.
+ * Overrides pdp-v21.css thumbnail rules which are loaded first.
+ *
+ * Design:
+ *   0.42 opacity was near-invisible on white backgrounds with light fashion
+ *   photography. New approach: 0.6 inactive (visible but clearly subdued),
+ *   1.0 active, plus a 3px inset left box-shadow in --jedda-ink as the
+ *   active indicator. Box-shadow doesn't affect layout or image dimensions.
+ *   The shadow faces the main image — a directional pointer.
+ *
+ * Architecture:
+ *   This file overrides only thumbnail rules from pdp-v21.css.
+ *   All other gallery rules remain in pdp-v21.css unchanged.
+ */
+
+/* ─────────────────────────────────────────────
+   Thumbnail rail — 64px wide image strip
+   ───────────────────────────────────────────── */
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail--philo {
+    width: 64px;
+    float: right;
+    margin-right: 0;
+    margin-left: 12px;
+    margin-top: 0;
+}
+
+/* Show actual thumbnail images (v21 hides them) */
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail img {
+    display: block;
+    width: 64px;
+    height: 80px;
+    object-fit: cover;
+    object-position: center top;
+}
+
+/* ─────────────────────────────────────────────
+   Thumbnail slides — opacity hierarchy + inset shadow active state.
+
+   0.42 was near-invisible on white backgrounds with light fashion
+   photography. 0.6 creates visible but clearly subdued inactive thumbnails.
+
+   Active indicator: inset left box-shadow (3px, --jedda-ink). Appears
+   on the left edge of the thumbnail image, facing the main image —
+   a directional pointer. Box-shadow doesn't affect layout or image size.
+   ───────────────────────────────────────────── */
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide {
+    opacity: 0.6;
+    cursor: pointer;
+    position: relative;
+    box-shadow: inset 3px 0 0 transparent;
+    transition: opacity var(--jedda-transition), box-shadow var(--jedda-transition);
+    margin-bottom: 4px;
+}
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide.slick-current {
+    opacity: 1;
+    box-shadow: inset 3px 0 0 var(--jedda-ink);
+}
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide:not(.slick-current):hover {
+    opacity: 0.85;
+}
+
+/* Remove the ::before bar marks from v21 — using box-shadow instead */
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide::before {
+    display: none;
+}
