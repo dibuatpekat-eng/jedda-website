@@ -1,66 +1,45 @@
 # Next Action
 
-Status: Gallery V2.1 plan ready. Awaiting founder approval to implement.
+Status: Gallery V2.1 implemented and QA'd on staging. Awaiting founder approval.
 Last updated: 2026-06-29.
 
 ## Current Situation
 
-Gallery V2 is technically working on staging (verified via hard refresh):
-- Thumbnail rail: 12px indicator strip ✓
+Gallery V2.1 is live on staging (beta.jeddawear.com/product/kiro-vest/):
+- Wrapper expanded to full viewport width ✓
+- Image: 817px = 54.0% of 1512px viewport ✓
+- Thumbnail strip: right side, 12px indicator ✓
 - Arrows: hidden (display: none !important) ✓
-- Main image: 672px (from 544px) ✓
-- Mobile counter: injected ✓
+- Top breathing room: 75.6px at 1512px ✓
+- Related Products: unaffected ✓
+- Mobile: unaffected (Foundation stacks at ≤768px) ✓
 
-Design verdict: directionally correct, not yet close enough to Toteme / SSSTEIN.
-Founder has not approved Gallery V2. V2.1 refinement plan is ready.
+LiteSpeed cache issue resolved: CSS renamed to `pdp-v21.css`, exclusion filter added to plugin.
 
-## LiteSpeed Cache Note
+## Immediate Next Step
 
-Gallery V2 CSS with arrow fix only visible after hard refresh (Ctrl+Shift+R).
-Normal page loads serve cached CSS (without !important on arrows).
-This is a staging deployment concern, not a code logic concern.
-To view Gallery V2 correctly on staging: hard refresh the product page.
+**Founder reviews Gallery V2.1 against Toteme / SSSTEIN direction.**
 
-## Gallery V2.1 Plan
+URL to review: https://beta.jeddawear.com/product/kiro-vest/
 
-Three changes. No HTML changes. All scoped to `body.single-product.jedda-pdp-v2`.
+Hard refresh (Ctrl+Shift+R) if CSS looks stale.
 
-### Change 1 — Thumbnail strip: left → right
-Move 12px indicator strip from left side to right side of image.
-Image starts flush at gallery column left edge. 20px visual gain, no awkward left float.
-```css
-.de-product-single__thumbnail--philo {
-  float: right; margin-right: 0; margin-left: 8px;
-}
-```
+Three scenarios:
+1. **Approved** → move to Product Summary component
+2. **Needs adjustment** → propose specific V2.2 changes
+3. **Too aggressive** → roll back to V2.0 (set `jedda_pdp_v2_enabled=0` or deactivate plugin)
 
-### Change 2 — Remove gallery column left padding
-Foundation applies ~15px left padding to all columns. Removing it extends image
-further left, to the row edge (closer to viewport).
-```css
-.de-product-single__images-left-philo {
-  padding-left: 0;
-}
-```
-Risk: must verify mobile (Foundation handles padding differently at breakpoints).
+## After Gallery Approval
 
-### Change 3 — Deliberate top breathing room
-Replace clamp(8px, 1.5vw, 28px) with clamp(48px, 5vw, 80px).
-Current value reads as a gap. Larger value reads as a curated editorial entry.
-```css
-.de-product-single__images-left-philo {
-  padding-top: clamp(48px, 5vw, 80px);
-}
-```
-
-## After V2.1
-
-If V2.1 is approved: move to Product Summary component.
-If V2.1 is still insufficient: propose V2.2 (gallery column negative margin into row padding).
+Move to Product Summary component:
+- Title & price hierarchy
+- Buy panel spacing
+- Variant selector presentation
+- Tab/accordion spacing
 
 ## PDP V2 Component Order
 
-1. Gallery ← V2 implemented, V2.1 plan ready, awaiting approval
+1. Gallery ← V2.1 implemented, awaiting founder approval
 2. Product Summary
 3. Title & Price
 4. Variant Selector
@@ -70,3 +49,12 @@ If V2.1 is still insufficient: propose V2.2 (gallery column negative margin into
 8. Mobile
 
 Each component requires approval before the next begins.
+
+## LiteSpeed Cache Note
+
+LiteSpeed CSS optimization was caching old CSS bundles indefinitely.
+**Fixed by:**
+- Renaming CSS to `pdp-v21.css` (new filename = no cached entry)
+- Adding `litespeed_optimize_css_excludes` filter in plugin PHP
+
+For future CSS changes: rename the file (e.g., `pdp-v22.css`) when deploying a new milestone to guarantee a fresh cache entry. The exclusion filter prevents LiteSpeed from bundling the file, but a fresh filename is the safest guarantee.

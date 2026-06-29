@@ -90,7 +90,7 @@ function jedda_commerce_ui_enqueue_pdp_v2_assets() {
 		return;
 	}
 
-	$css_path = JEDDA_COMMERCE_UI_PATH . 'assets/css/pdp-v2.css';
+	$css_path = JEDDA_COMMERCE_UI_PATH . 'assets/css/pdp-v21.css';
 	$js_path  = JEDDA_COMMERCE_UI_PATH . 'assets/js/pdp-v2.js';
 
 	$css_version = file_exists($css_path) ? (string) filemtime($css_path) : JEDDA_COMMERCE_UI_VERSION;
@@ -98,7 +98,7 @@ function jedda_commerce_ui_enqueue_pdp_v2_assets() {
 
 	wp_enqueue_style(
 		'jedda-pdp-v2',
-		JEDDA_COMMERCE_UI_URL . 'assets/css/pdp-v2.css',
+		JEDDA_COMMERCE_UI_URL . 'assets/css/pdp-v21.css',
 		array(),
 		$css_version
 	);
@@ -126,3 +126,13 @@ function jedda_commerce_ui_enqueue_pdp_v2_assets() {
 	);
 }
 add_action('wp_enqueue_scripts', 'jedda_commerce_ui_enqueue_pdp_v2_assets', 30);
+
+/**
+ * Exclude jedda-pdp-v2 CSS from LiteSpeed CSS optimization so it is
+ * always served as the real file (versioned via filemtime) rather than
+ * bundled into a stale LiteSpeed CSS optimisation bundle.
+ */
+add_filter('litespeed_optimize_css_excludes', function ($excludes) {
+	$excludes[] = 'jedda-commerce-ui/assets/css/pdp-v21.css';
+	return $excludes;
+});

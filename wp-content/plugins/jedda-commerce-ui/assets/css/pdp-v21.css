@@ -37,8 +37,8 @@ body.single-product.jedda-pdp-v2 {
    elements are unaffected.
    ============================================================ */
 
-body.single-product.jedda-pdp-v2 .de-product-single__wrapper.row {
-	max-width: 100%;
+body.single-product.jedda-pdp-v2 #de-product-container .de-product-single__wrapper.row {
+	max-width: 100% !important;
 }
 
 /* ============================================================

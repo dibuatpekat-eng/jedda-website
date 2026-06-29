@@ -42,59 +42,55 @@ Custom plugin:
 - `pdp-v2.js` — Mobile image counter (event-based, Slick afterChange).
 - PDP V2 disabled by default. Feature flag required to activate.
 
-## Gallery V2 — Implemented, QA Complete, Design Review Complete
+## Gallery V2.1 — Implemented, QA Complete, Awaiting Founder Approval
 
-Gallery V2 was implemented and QA'd on 2026-06-29.
-Design review conducted. Verdict: technically correct, not yet close enough to Toteme/SSSTEIN.
-V2.1 refinement plan ready. Awaiting founder approval to implement.
+Gallery V2.1 implemented on 2026-06-29. Stronger Editorial option.
 
-To view Gallery V2 correctly on staging: hard refresh (Ctrl+Shift+R) the product page.
-Normal page loads serve LiteSpeed-cached CSS (arrows visible, old layout).
+Active file: `assets/css/pdp-v21.css` (renamed from `pdp-v2.css` to bust LiteSpeed CSS optimization cache).
 
-### Reverse Engineering — Now Complete
+### Verified Measurements (1512px viewport, staging)
 
-CSS cascade for gallery arrows:
-- `dahz-framework-blog.css:28136` — base `.de-slick-product-arrows { display: flex }`
-- `dahz-framework-blog.css:27202` — philo-specific transform positioning
-- `dahz-framework-blog.css:27227` — `.de-product-single__images--philo:hover` → `opacity: 1`
-- `pdp-v2.css` — `display: none !important` removes all states
+| Metric | V2.0 | V2.1 | Target (Toteme) |
+|---|---|---|---|
+| Wrapper max-width | 1280px | 100% (1512px) | full |
+| Gallery column width | 712px | 847px | ~840px |
+| Image width | 672px | 817px | ~840px |
+| Image % of viewport | 44.5% | 54.0% | 54-62% |
+| Top breathing room | 8-28px | 48-80px (75.6px at 1512px) | ~60-80px |
+| Arrows | hidden | hidden | none |
+| Thumbnail position | left | right | right or none |
+| Mobile | unaffected | unaffected | n/a |
 
-Layout constraint: `.row` max-width 1280px centered → 116px side margins at 1512px viewport.
-Gallery column ceiling: ~712px (Foundation large-7). Image at 672px = 44.5% viewport. Toteme: 55-62%.
-HTML change required to exceed this ceiling. V2.1 stays within CSS-only.
+### What Changed V2.0 → V2.1
 
-`df-commerce.js` confirmed: zero product gallery arrow manipulation. Safe.
+1. Row expanded: `#de-product-container .de-product-single__wrapper.row { max-width: 100% !important }`. Theme had `max-width: 1280px !important` with ID selector — matched specificity with same ID in our selector.
+2. Thumbnail moved to right: `float: right; margin-right: 0; margin-left: 8px`
+3. Gallery left padding removed: `padding-left: 0`
+4. Top breathing room: `clamp(48px, 5vw, 80px)` (was `clamp(8px, 1.5vw, 28px)`)
 
-### Design Gap Analysis
+### Full PDP Check
 
-| Dimension | Current | Target (Toteme/SSSTEIN) |
-|---|---|---|
-| Image % of viewport | 44.5% | 55-62% |
-| Thumbnail position | left of image | right or none |
-| Arrows on image | visible (LiteSpeed cache) | zero chrome |
-| Top breathing room | 8-28px | 48-80px |
-| Whitespace feeling | default grid | curated |
+- Gallery: dominant, clean, no arrows ✓
+- Related Products section: full-width, unaffected by wrapper change ✓
+- Product info (right column): all elements intact, wider column ✓
+- White space below BUY NOW: expected — gallery is taller than summary. Addressed in Product Summary V2.
+- Mobile: Foundation `small-12` stacks both columns. Max-width change inactive below 1280px ✓
 
-## Gallery V2 — Implementation Complete, Awaiting QA
+### LiteSpeed CSS Optimization — Resolved
 
-Gallery V2 was implemented on 2026-06-29 by the Claude Code engineer.
+LiteSpeed was bundling plugin CSS into a server-level cache. Old content was served despite new files being deployed.
 
-What changed (inside `jedda-commerce-ui`):
-- `pdp-v2.css`: replaced failed full-page attempt with gallery-only rules targeting real Upscale selectors.
-- `pdp-v2.js`: replaced with gallery counter only.
+Fix:
+- `litespeed_optimize_css_excludes` filter added to `jedda-commerce-ui.php`
+- CSS renamed to `pdp-v21.css` (new filename = no existing cache entry)
+- Rule: when deploying a new milestone CSS, rename the file (pdp-v22.css, etc.)
 
-Summary of gallery changes:
-- Thumbnail rail reduced to 12px indicator strip (from 100px + 48px gap).
-- Thumbnail images hidden; active slide shown via 2px left-border mark.
-- Gallery arrows hidden.
-- Crosshair cursor removed from main image.
-- Gallery column breathing room added.
-- Mobile image counter (`1 / 6`) injected via JS.
-- Main image gains ~128px of width — 44% of viewport vs 36%.
+### CSS Cascade for Key Rules
 
-Full analysis: `32_GALLERY_V2_MILESTONE.md`.
+Arrows: `dahz-framework-blog.css:28136` sets `display: flex`. Our `display: none !important` wins.
+Wrapper max-width: `custom.css` sets `max-width: 1280px !important` via `#de-product-container`. Our selector `body.single-product.jedda-pdp-v2 #de-product-container .de-product-single__wrapper.row` matches with `max-width: 100% !important`.
 
-**Status: not yet activated on staging. Requires plugin activation + feature flag.**
+`df-commerce.js` confirmed: zero gallery arrow manipulation. Safe.
 
 ## Failed Work (Do Not Repeat)
 

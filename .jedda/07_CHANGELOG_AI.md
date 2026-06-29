@@ -2,6 +2,58 @@
 
 Record engineering work chronologically.
 
+## 2026-06-29 — Gallery V2.1 — Stronger Editorial Option (Claude Code workspace)
+
+### Changes Implemented
+
+Option 2 (Stronger Editorial) approved and implemented via `pdp-v21.css` (new filename; `pdp-v2.css` was LiteSpeed-cached at old version).
+
+**Four changes, all scoped to `body.single-product.jedda-pdp-v2`:**
+
+1. **Row max-width expansion** — `#de-product-container .de-product-single__wrapper.row { max-width: 100% !important }`. Overrides `max-width: 1280px !important` in `custom.css` (which uses ID selector). Makes the product wrapper fill the full viewport at desktop. Mobile unaffected (Foundation stacks at <768px, max-width constraint has no effect below 1280px viewport).
+
+2. **Thumbnail strip moved to right** — `float: right; margin-right: 0; margin-left: 8px`. Image now starts at the gallery column's left edge.
+
+3. **Gallery left padding removed** — `padding-left: 0`. Image starts flush against the row's left inner boundary.
+
+4. **Top breathing room increased** — `padding-top: clamp(48px, 5vw, 80px)` (from `clamp(8px, 1.5vw, 28px)`). At 1512px = 75.6px of deliberate editorial entry space.
+
+**Arrow visibility fix also confirmed** — `display: none !important` working (was blocked by LiteSpeed CSS optimization serving stale bundle).
+
+### Verified Measurements (1512px viewport)
+
+| Metric | V2.0 | V2.1 | Target (Toteme) |
+|---|---|---|---|
+| Image width | 672px | 817px | ~840px |
+| Image % of viewport | 44.5% | 54.0% | 54-62% |
+| Wrapper width | 1280px | 1512px (full) | full |
+| Top breathing room | 8-28px | 48-80px | ~60-80px |
+| Arrows | hidden | hidden | none |
+| Thumbnail position | left | right | right or none |
+
+### LiteSpeed CSS Optimization Investigation + Fix
+
+LiteSpeed CSS optimization bundled our plugin CSS into a server-level cache. The cached bundle contained the very first (failed) version of `pdp-v2.css` from before Gallery V2. Several purge attempts via `LiteSpeed_Cache_API::purge_all()` did not clear the CSS optimization bundle.
+
+**Resolution:**
+- Added `litespeed_optimize_css_excludes` filter to plugin PHP to exclude the file from future bundling.
+- Renamed CSS file to `pdp-v21.css` (new filename = no cached response exists). PHP updated to reference `pdp-v21.css`.
+- Discovered theme rule `#de-product-container .de-product-single__wrapper { max-width: 1280px !important }` — ID selector + `!important` — which was blocking our max-width override. Fixed by matching the ID in our selector and adding `!important`.
+
+### Full PDP Visual Check
+
+- Gallery: dominant, clean, no arrows, no chrome ✓
+- Product summary column (right): title, price, accordions, color, size, ATC, BUY NOW — all intact ✓
+- Below gallery: expected white space (gallery taller than summary — to be addressed in Product Summary V2)
+- Related Products: full-width, unaffected by wrapper change ✓
+- Mobile: Foundation stacks both columns to full-width (small-12). max-width change has zero effect below 1280px viewport ✓
+
+### Files Changed
+
+- `assets/css/pdp-v21.css` — new file (Gallery V2.1 implementation, replaces `pdp-v2.css` as active file)
+- `assets/css/pdp-v2.css` — contains V2.1 CSS but no longer the active file (PHP references `pdp-v21.css`)
+- `jedda-commerce-ui.php` — references `pdp-v21.css`; added `litespeed_optimize_css_excludes` filter
+
 ## 2026-06-29 — Gallery V2 Design Review + V2.1 Plan (Claude Code workspace)
 
 - Conducted full design review of Gallery V2 against Toteme / SSSTEIN references.
