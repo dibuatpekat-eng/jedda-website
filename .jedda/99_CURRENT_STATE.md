@@ -262,41 +262,52 @@ Completed 2026-06-30. All verified on staging.
 | `--jedda-header-height: 114px` | ✅ |
 | Gallery V2.1 intact | ✅ (847px width, images loading) |
 
-## Milestone 2.8.4 — CMS Architecture + Gallery Upgrade (Complete, Pending Final Deploy)
+## Milestone 2.8.4 — CMS Architecture + Gallery Upgrade (Complete)
 
-Completed 2026-06-30. Pending: SSH to 77.37.81.144 timed out mid-session. CSS correction (pdp-v24.css revision) not yet pushed to server. All other files already deployed and verified.
+Completed 2026-06-30. All deployed and verified on staging.
 
-### ACF Pro Integration
+### ACF Pro Integration — Verified ✅
 
 - `class-acf-fields.php` — `acf/settings/load_json` filter only, no PHP field registration
 - `class-acf-options.php` — Options Page registration + `acf/settings/save_json` filter
 - `acf-json/group_jedda_product.json` — per-product fields (details, composition, care, 2 repeaters)
 - `acf-json/group_jedda_policy.json` — global policy fields (4 textarea, options page location)
 - WP Admin → WooCommerce → Jedda Policy page: verified ✅
-- WP Admin → Edit Product → Jedda Product Data meta box: verified ✅
+- WP Admin → Edit Product → Jedda Product Data meta box: all 5 fields verified ✅
+- **Workaround active**: WPCode snippet #13967 (`acf/init` + `acf_add_local_field_group()`) loads JSON files. Permanent fix (remove `function_exists('acf')` guard in `class-acf-fields.php`) requires SSH.
 
-### Gallery Thumbnail Upgrade (pdp-v24.css)
+### Gallery Thumbnail Upgrade (pdp-v24.css) — Deployed ✅
 
-12px indicator strip → 64px image thumbnails. Design revised mid-milestone:
-- **First design (0.42 opacity):** near-invisible on white backgrounds with light fashion photography.
-- **Final design:** 0.6 inactive opacity (clearly visible), 1.0 active, 3px inset left `box-shadow` in `--jedda-ink` as active indicator. Faces main image — directional pointer.
+File deployed to staging via WPIDE File Manager. CSS verified correct on server (opacity: 0.6, box-shadow).
+
+- **Inactive thumbnails:** 0.6 opacity (was 0.42 — near-invisible on white backgrounds)
+- **Active thumbnail:** 1.0 opacity, `box-shadow: inset 3px 0 0 var(--jedda-ink)` left edge indicator
+- **Hover:** 0.85 opacity
 - Images: 64px × 80px, `object-fit: cover`, `object-position: center top`
-- Hover on inactive: 0.85 opacity
+- **Cache override active**: WPCode snippet #13968 (CSS Snippet) forces correct values while LiteSpeed clears its static file cache for `pdp-v24.css`
 
-### Pending (SSH deploy only)
+### Gallery Thumbnail Slick Configuration — Architectural Finding
 
-- `pdp-v24.css` revision (opacity + box-shadow design) not yet on server
-- Content data not yet entered in WP Admin (Kiro Cropped Vest fields + Jedda Policy)
-- Git commit and push for 2.8.4
+The Upscale/Philo thumbnail Slick slider is configured as a **horizontal** carousel (one 64px slide visible at a time through overflow:hidden). To display multiple image thumbnails as a visible vertical strip (as originally intended), the slider needs:
+- `vertical: true` on the Slick initialization
+- `slidesToShow: N` to show multiple thumbnails simultaneously
+
+This is a JS change, not CSS. **Moved to Milestone 2.8.5** as part of the interaction layer redesign.
+
+### WPCode Snippets Added
+
+- **#13967** — ACF JSON loader (workaround for class-acf-fields.php bug)
+- **#13968** — Gallery pdp-v24 CSS cache override (temp, deactivate after LiteSpeed clears)
 
 ## Current Risks
 
 - ~~ACF Pro not yet purchased~~ — RESOLVED: installed and active on staging
 - ~~WPCode #11836 content unknown~~ — RESOLVED: audited (My Account "Request" text remover, zero PDP impact)
-- SSH connectivity intermittent — may cause deploy delays
+- ~~SSH connectivity intermittent~~ — RESOLVED: deployed via WPIDE File Manager
+- `class-acf-fields.php` `function_exists('acf')` bug — workaround via WPCode #13967. Permanent fix pending SSH.
 
 ## Immediate Next Step
 
-**Engineer:** Deploy `pdp-v24.css` revision → verify thumbnail strip visually → enter content in WP Admin → commit + push 2.8.4 → proceed to 2.8.5 (Template + Typography)
-
 **Owner action pending:** Enter content in WP Admin for Kiro Cropped Vest (Jedda Product Data fields) and Jedda Policy fields. Also rename WPCode #11836 to "My Account: Remove Payment Request Text".
+
+**Engineer:** After content entry → commit + push 2.8.4 → proceed to 2.8.5 (Template + Typography + Slick vertical thumbnail).

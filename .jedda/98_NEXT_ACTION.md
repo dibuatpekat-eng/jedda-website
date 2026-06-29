@@ -1,17 +1,13 @@
 # Next Action
 
-Status: Milestone 2.8.4 complete (pending final deploy + content entry). No owner blockers.
+Status: Milestone 2.8.4 complete. Pending content entry (owner) then 2.8.5. No engineer blockers.
 Last updated: 2026-06-30.
 
-## Immediate: Deploy pdp-v24.css Revision (Engineer)
+## Cleanup (Low Priority)
 
-SSH to 77.37.81.144 timed out during the 2.8.4 session. The CSS file (`pdp-v24.css`) was revised locally to fix the opacity issue (0.42 → 0.6 + box-shadow active indicator) but not yet pushed to server.
+Once LiteSpeed cache for `pdp-v24.css` clears naturally (may take hours/days), deactivate WPCode snippet #13968 ("Jedda Gallery: pdp-v24 cache override (temp)"). The permanent values are in the file itself.
 
-Steps:
-1. SCP `pdp-v24.css` to staging server (use SCP+tar, not SSH heredoc)
-2. Clear LiteSpeed CSS cache on staging
-3. Hard refresh browser, verify thumbnail strip is visible at 0.6 opacity
-4. Verify active thumbnail has inset left box-shadow indicator
+When SSH is available: remove the `if (! function_exists('acf')) { return; }` guard in `class-acf-fields.php::init()` and then deactivate WPCode snippet #13967.
 
 ## Owner Actions Required (Content Entry)
 
@@ -51,6 +47,7 @@ Scope:
 3. Accordion moved below ATC buttons (DETAILS/FIT & SIZING/MATERIAL & CARE/SHIPPING & RETURNS)
 4. Multi-open accordion (all closed by default)
 5. Interaction layer redesign: color/size/qty/ATC/Buy Now/hover/active/disabled/loading/success/validation/focus/transitions
+6. **Slick vertical thumbnail strip**: re-initialize thumbnail slider with `vertical: true` + `slidesToShow: N`. Current Slick config is horizontal (one slide at a time). Vertical mode required for visible image strip.
 
 ## Full Milestone Sequence
 
