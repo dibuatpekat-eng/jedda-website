@@ -2,6 +2,32 @@
 
 Record engineering work chronologically.
 
+## 2026-06-29 — Gallery V2 Implementation (Claude Code workspace)
+
+- Completed full Gallery V2 reverse engineering from live staging DOM inspection.
+- Mapped complete Upscale Philo gallery structure: `.de-product-single__images-left-philo`, `.de-product-single__images-container--philo`, `.de-product-single__thumbnail--philo`, `.de-product-single__images--philo`, `.de-product-single__images--philo-inner`.
+- Confirmed CSS ownership: `dahz-framework-blog.css` (primary), `custom.css` (thumbnail gap + mobile hide).
+- Confirmed JS ownership: `dahz-framework-themes.js` and `df-commerce.js` init both Slick sliders.
+- Confirmed Slick config: main slider (horizontal, 1 slide, lazyLoad ondemand, asNavFor thumbnail), thumbnail slider (vertical, 3 slides, focusOnSelect, asNavFor main).
+- Confirmed image dimensions: 1032×1548px natural (2:3 portrait), displayed at 524×786px.
+- Identified 5 UX issues: insufficient image scale, disproportionate thumbnail gap, always-visible arrows, weak active state, no mobile navigation affordance.
+- Replaced failed full-page `pdp-v2.css` (which used wrong generic WooCommerce selectors) with gallery-only CSS targeting real Upscale selectors.
+- Replaced `pdp-v2.js` with gallery-only counter implementation.
+- Gallery V2 changes:
+  - Thumbnail rail reduced to 12px indicator strip (from 100px) — main image gains ~128px width.
+  - Thumbnail images hidden; replaced by 2px left-border active indicator strip.
+  - Inactive thumbnails show muted `--jedda-line` mark; active shows `--jedda-ink`; hover shows `--jedda-muted`.
+  - Gallery arrows hidden entirely — navigation belongs to thumbnails and swipe.
+  - Crosshair cursor removed from main image hover.
+  - Breathing room added to gallery column via `padding-top: clamp(8px, 1.5vw, 28px)`.
+  - Mobile image counter (`1 / 6`) injected via event-based JS below gallery column.
+- Verified JS syntax with `node --check`: passed.
+- Created `32_GALLERY_V2_MILESTONE.md` with complete analysis and decision log.
+- Updated `98_NEXT_ACTION.md` and `99_CURRENT_STATE.md`.
+- Committed and pushed to `origin/main`.
+- PDP V2 remains disabled by default. Staging activation requires explicit feature flag.
+- No payment, checkout, cart, summary, variants, add-to-cart, orders, or stock was touched.
+
 ## 2026-06-29 — Sprint 2 Product Page Excellence Recovery Checkpoint
 
 - Added `27_PRODUCT_PAGE_EXCELLENCE_SPRINT_2.md`.

@@ -1,98 +1,65 @@
 # Next Action
 
-Status: Immediate next milestone definition.
+Status: Awaiting Gallery V2 approval before next component.
 Last updated: 2026-06-29.
 
-## Immediate Next Milestone
+## Immediate Next Step
 
-Gallery V2.
+Gallery V2 has been implemented and pushed. It is not yet activated on staging.
 
-This is the next implementation milestone. It is not a full PDP redesign.
+**Required before any further implementation:**
 
-## Objective
+1. Enable PDP V2 on staging for Gallery QA:
+   - Set `jedda_pdp_v2_enabled` option to `1` via WordPress admin → Settings → General → (WP option), or ask the AI engineer to do it via browser.
+2. Open a product page on staging while logged in.
+3. Review the gallery against the Toteme / SSSTEIN reference direction.
+4. Confirm or reject Gallery V2.
+5. Only after approval: move to Product Summary component.
 
-Rebuild only the Product Page gallery presentation toward JEDDA V2 direction while preserving WooCommerce, Upscale functionality, variation behavior, cart, checkout, Midtrans, Epeken, payment, orders, stock, and customer data.
+## Gallery V2 Activation
 
-## Why Gallery First
+The plugin is installed on staging but deactivated. Two steps are needed:
 
-The failed full-page PDP V2 pass proved that broad visual changes are too risky. The gallery is the strongest brand signal and should be handled as an independent component with its own reverse engineering.
+Step 1 — Activate the plugin:
+- WordPress admin → Plugins → JEDDA Commerce UI → Activate.
 
-## Required Work Before Coding
+Step 2 — Enable PDP V2 feature flag:
+- WordPress admin → set `jedda_pdp_v2_enabled = 1`, or run:
+  `wp option update jedda_pdp_v2_enabled 1`
 
-1. Confirm repository and latest commit.
-2. Confirm staging PDP is stable and `JEDDA Commerce UI` is inactive or PDP V2 disabled.
-3. Open the current PDP in a logged-in browser.
-4. Capture before screenshots:
-   - Desktop first viewport.
-   - Gallery close-up.
-   - Mobile gallery.
-5. Reverse-engineer the actual gallery implementation:
-   - `.de-product-single__images-left-philo`
-   - `.de-product-single__images-container`
-   - `.de-product-single__thumbnail`
-   - `.thumbnails.slick`
-   - `.de-product-single__images`
-   - `.de-product-single__images--philo-inner`
-   - Main image elements.
-   - Thumbnail image elements.
-   - Slick slider behavior.
-   - Lazy-load classes.
-   - Product image data source.
-6. Identify dependencies:
-   - Upscale theme.
-   - WooCommerce product image data.
-   - Slick carousel/theme scripts.
-   - Lazy-load behavior.
-   - Any snippets that affect PDP images.
-7. Define Gallery V2 visual direction before coding:
-   - Image scale.
-   - Main image ratio.
-   - Thumbnail role.
-   - Desktop rhythm.
-   - Mobile rhythm.
-   - Loading/placeholder behavior.
+To disable after QA:
+- `wp option update jedda_pdp_v2_enabled 0`
+- OR deactivate the plugin.
 
-## Allowed Implementation
+## Open Decision — Thumbnail Visibility
 
-Only gallery-focused code through `wp-content/plugins/jedda-commerce-ui`.
+Gallery V2 hides thumbnail images entirely (12px indicator strip).
+If QA shows visible thumbnails are preferred, a fallback is documented in `32_GALLERY_V2_MILESTONE.md`.
 
-Allowed:
+## After Gallery V2 Approval
 
-- Gallery-scoped CSS.
-- Gallery-scoped JS only if needed and event-based.
-- PDP V2 activation only for gallery test if safe and reversible.
+Next component: **Product Summary**.
 
-Not allowed:
+Scope:
+- Buy panel spacing and vertical rhythm.
+- Title and price hierarchy.
+- Short description placement.
 
-- Product summary changes.
-- Title/price changes.
-- Variant selector changes.
-- Add-to-cart changes.
-- Details/accordion changes.
-- Related products changes.
-- Cart/checkout/payment/shipping/order changes.
-- Full PDP layout grid changes.
+Not included in Product Summary:
+- Variant selector (separate component).
+- Add-to-cart (separate component).
+- Gallery (already done).
+- Cart, checkout, payment, stock.
 
-## Expected Output After Gallery V2
+## PDP V2 Component Order
 
-- Gallery DOM/dependency map.
-- Before screenshots.
-- Gallery-only V2 implementation.
-- After screenshots.
-- Explanation of why it matches Toteme / SSSTEIN / MOIA Seoul / Nothing Written.
-- Regression notes.
-- Rollback plan.
-- Documentation update.
-- Commit and push.
-- Stop and wait for approval before Product Summary or any other component.
+1. Gallery ← IMPLEMENTED, awaiting approval
+2. Product Summary
+3. Title & Price
+4. Variant Selector
+5. Add-to-Cart
+6. Product Details / Accordion
+7. Recommendations
+8. Mobile
 
-## Success Criteria
-
-Gallery V2 succeeds only if:
-
-- Main product image scale is preserved or improved.
-- Page does not compress.
-- Product summary is not affected.
-- Add-to-cart behavior is unchanged.
-- Mobile gallery remains usable.
-- The result feels more premium, intentional, and image-led than the original.
+Each component requires approval before the next begins.

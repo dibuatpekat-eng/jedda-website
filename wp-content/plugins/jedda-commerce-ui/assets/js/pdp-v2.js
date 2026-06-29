@@ -1,90 +1,124 @@
+/**
+ * JEDDA Product Page V2 — Gallery Component
+ *
+ * Milestone: Gallery V2
+ * Scope: product pages with body.jedda-pdp-v2 only.
+ *
+ * Responsibilities:
+ * - Honour the browser kill switch.
+ * - Inject a minimal mobile image counter below the gallery.
+ * - Update the counter on Slick slide change.
+ *
+ * Rules:
+ * - No MutationObserver.
+ * - No cart, checkout, payment, shipping, stock, or order logic.
+ * - Event-based only: DOMContentLoaded, pageshow, Slick afterChange.
+ */
+
 (function () {
 	'use strict';
+
+	/* ----------------------------------------------------------
+	   Kill switch
+	   ---------------------------------------------------------- */
 
 	var config = window.JEDDA_PDP_V2 || {};
 	var killSwitchKey = config.killSwitchKey || 'jedda:disable-pdp-v2';
 
 	try {
 		if (window.localStorage && window.localStorage.getItem(killSwitchKey) === '1') {
-			document.documentElement.classList.add('jedda-pdp-v2-disabled');
-			if (document.body) {
-				document.body.classList.remove('jedda-pdp-v2');
+			return;
+		}
+	} catch (e) {
+		// localStorage blocked — continue
+	}
+
+	/* ----------------------------------------------------------
+	   Guard: only run on V2-enabled product pages
+	   ---------------------------------------------------------- */
+
+	if (!document.body.classList.contains('jedda-pdp-v2')) {
+		return;
+	}
+
+	/* ----------------------------------------------------------
+	   Mobile gallery counter
+	   Injected below .de-product-single__images-left-philo.
+	   Listens to Slick afterChange on the main image slider.
+	   Shows "1 / 6" format. Visible only at ≤768px via CSS.
+	   ---------------------------------------------------------- */
+
+	function initGalleryCounter() {
+		var $ = window.jQuery;
+		if (!$) {
+			return;
+		}
+
+		var $mainSlider = $('.de-product-single__images--philo-inner');
+		if (!$mainSlider.length) {
+			return;
+		}
+
+		var galleryCol = document.querySelector('.de-product-single__images-left-philo');
+		if (!galleryCol) {
+			return;
+		}
+
+		// Prevent double-init on pageshow re-fires
+		if (galleryCol.querySelector('.jedda-gallery-counter')) {
+			return;
+		}
+
+		function buildCounter(slideCount) {
+			if (!slideCount || slideCount < 2) {
+				return;
 			}
-			return;
+
+			var counter = document.createElement('div');
+			counter.className = 'jedda-gallery-counter';
+			counter.setAttribute('aria-hidden', 'true');
+			counter.textContent = '1 / ' + slideCount;
+			galleryCol.appendChild(counter);
+
+			$mainSlider.on('afterChange.jeddaGalleryCounter', function (event, slick, currentSlide) {
+				counter.textContent = (currentSlide + 1) + ' / ' + slideCount;
+			});
 		}
-	} catch (error) {
-		// Continue if storage is unavailable.
+
+		// Slick may already be initialised when this deferred script runs
+		if ($mainSlider.hasClass('slick-initialized')) {
+			var instance = $mainSlider[0] && $mainSlider[0].slick;
+			var count = instance
+				? instance.slideCount
+				: $mainSlider.find('.slick-slide:not(.slick-cloned)').length;
+			buildCounter(count);
+		} else {
+			// Hook init event before Slick fires it
+			$mainSlider.on('init.jeddaGalleryCounter', function (event, slick) {
+				buildCounter(slick.slideCount);
+			});
+		}
 	}
 
-	function closestForm(target) {
-		if (!target || !target.closest) {
-			return null;
-		}
+	/* ----------------------------------------------------------
+	   Lifecycle hooks
+	   ---------------------------------------------------------- */
 
-		return target.closest('form.cart');
+	function onReady() {
+		initGalleryCounter();
 	}
-
-	function updateSelectionState(form) {
-		if (!form) {
-			return;
-		}
-
-		var selects = Array.prototype.slice.call(form.querySelectorAll('select[name^="attribute_"]'));
-		var hasSelection = selects.some(function (select) {
-			return !!select.value;
-		});
-		var isComplete = selects.length > 0 && selects.every(function (select) {
-			return !!select.value;
-		});
-
-		form.classList.toggle('jedda-pdp-v2-has-selection', hasSelection);
-		form.classList.toggle('jedda-pdp-v2-complete-selection', isComplete);
-	}
-
-	function initForm(form) {
-		if (!form || form.dataset.jeddaPdpV2Ready === '1') {
-			return;
-		}
-
-		form.dataset.jeddaPdpV2Ready = '1';
-		updateSelectionState(form);
-	}
-
-	function init() {
-		if (!document.body || !document.body.classList.contains('jedda-pdp-v2')) {
-			return;
-		}
-
-		document.body.dataset.jeddaPdpV2 = 'active';
-
-		Array.prototype.forEach.call(document.querySelectorAll('form.cart'), initForm);
-	}
-
-	document.addEventListener('change', function (event) {
-		var target = event.target;
-
-		if (target && target.matches && target.matches('select[name^="attribute_"]')) {
-			updateSelectionState(closestForm(target));
-		}
-	}, true);
-
-	document.addEventListener('click', function (event) {
-		var option = event.target && event.target.closest
-			? event.target.closest('.variable-item, .button-variable-item, .color-variable-item')
-			: null;
-
-		if (option) {
-			window.setTimeout(function () {
-				updateSelectionState(closestForm(option));
-			}, 0);
-		}
-	}, true);
 
 	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init, { once: true });
+		document.addEventListener('DOMContentLoaded', onReady);
 	} else {
-		init();
+		onReady();
 	}
 
-	window.addEventListener('pageshow', init);
+	// Back-forward cache restore
+	window.addEventListener('pageshow', function (e) {
+		if (e.persisted) {
+			onReady();
+		}
+	});
+
 }());

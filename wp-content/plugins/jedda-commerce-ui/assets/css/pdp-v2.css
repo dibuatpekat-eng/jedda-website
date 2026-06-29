@@ -1,305 +1,179 @@
 /**
- * JEDDA Product Page V2 Foundation
+ * JEDDA Product Page V2 — Gallery Component
  *
+ * Milestone: Gallery V2
  * Scope: body.single-product.jedda-pdp-v2 only.
- * Goal: begin replacing the inherited PDP presentation layer while preserving
- * WooCommerce commerce behavior, cart, checkout, payment, shipping, and orders.
+ * Targets: real Upscale Philo layout selectors (.de-product-single__*).
+ *
+ * Do not add rules for summary, title, price, variants, add-to-cart,
+ * tabs, recommendations, cart, checkout, payment, or stock.
+ *
+ * References: Toteme, SSSTEIN, MOIA Seoul, Nothing Written.
  */
 
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+
 body.single-product.jedda-pdp-v2 {
-	--jedda-pdp-ink: #171717;
-	--jedda-pdp-muted: #686868;
-	--jedda-pdp-soft: #f6f5f2;
-	--jedda-pdp-line: #d9d7d1;
-	--jedda-pdp-success: #4d5548;
-	--jedda-pdp-error: #7a3d35;
-	--jedda-pdp-gap-xs: 8px;
-	--jedda-pdp-gap-sm: 12px;
-	--jedda-pdp-gap-md: 20px;
-	--jedda-pdp-gap-lg: 32px;
-	--jedda-pdp-gap-xl: clamp(44px, 6vw, 88px);
-	color: var(--jedda-pdp-ink);
+	--jedda-ink:        #171717;
+	--jedda-muted:      #686868;
+	--jedda-line:       #d9d7d1;
+	--jedda-soft:       #f6f5f2;
+	--jedda-transition: 180ms ease;
 }
 
-body.single-product.jedda-pdp-v2 .product {
-	max-width: min(1440px, calc(100vw - 40px));
-	margin-inline: auto;
+/* ============================================================
+   GALLERY COLUMN — BREATHING ROOM
+   .de-product-single__images-left-philo is the large-7 Foundation
+   column that owns the entire gallery area.
+
+   A small padding-top lifts the gallery off the elements above
+   and gives the image editorial air — consistent with how Toteme
+   and SSSTEIN treat space above their product images.
+   ============================================================ */
+
+body.single-product.jedda-pdp-v2 .de-product-single__images-left-philo {
+	padding-top: clamp(8px, 1.5vw, 28px);
 }
 
-body.single-product.jedda-pdp-v2 div.product {
+/* ============================================================
+   THUMBNAIL RAIL
+   Reduced to a minimal indicator strip.
+
+   Current: 100px wide, 48px gap to image (148px total overhead).
+   V2: 12px wide, 8px gap (20px total overhead).
+   Net gain for main image: +128px.
+
+   Reference influence:
+   - Toteme keeps thumbnails tight and minimal — navigation aid only.
+   - SSSTEIN reduces gallery chrome to near zero. The image owns
+     the column. The thumbnail strip is almost invisible.
+
+   At 12px, the rail becomes a pure indicator column: the active
+   left-border mark is the only visible element. Thumbnails at this
+   width are not meant to show image detail — they are position
+   markers, like a vertical timeline of images.
+
+   Rollback note: if QA requires visible thumbnails, change width
+   to 64px and margin-right to 12px for a less aggressive but still
+   improved result (+72px main image gain).
+   ============================================================ */
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail--philo {
+	width: 12px;
+	margin-right: 8px;
+	margin-top: 0;
+}
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail img {
+	display: none;
+}
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-track {
+	width: 100% !important;
+}
+
+/* ============================================================
+   THUMBNAIL ACTIVE STATE
+   Theme uses opacity: 0.6 on inactive, 1 on active.
+   V2 uses opacity: 1 always + a 2px left-border mark on active.
+
+   The pseudo-element sits inside the slide with absolute position
+   — zero layout impact, no box-model interference with Slick.
+
+   Reference influence: SSSTEIN and Toteme both avoid opacity fades
+   on navigation indicators. The mark is precise — it says "here"
+   without dim-and-highlight theatrics.
+   ============================================================ */
+
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide {
+	opacity: 1;
 	position: relative;
+	cursor: pointer;
 }
 
-body.single-product.jedda-pdp-v2 div.product::after {
-	content: "";
-	display: table;
-	clear: both;
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 4px;
+	bottom: 4px;
+	width: 2px;
+	background-color: var(--jedda-line);
+	transition: background-color var(--jedda-transition);
 }
 
-body.single-product.jedda-pdp-v2 .woocommerce-product-gallery {
-	float: none;
-	width: 100%;
-	margin-bottom: var(--jedda-pdp-gap-lg);
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide.slick-current::before {
+	background-color: var(--jedda-ink);
 }
 
-body.single-product.jedda-pdp-v2 .woocommerce-product-gallery img {
+body.single-product.jedda-pdp-v2 .de-product-single__thumbnail .slick-slide:not(.slick-current):hover::before {
+	background-color: var(--jedda-muted);
+}
+
+/* ============================================================
+   GALLERY ARROWS
+   Hidden entirely. Navigation belongs to the thumbnail indicator
+   strip and to Slick's built-in touch/swipe on desktop.
+
+   Reference influence: Toteme and SSSTEIN have no visible arrows
+   on the main product image. Arrows sitting on a garment image
+   read as interface, not experience. Removing them shifts the
+   page from "slider UI" to "editorial image presentation."
+   ============================================================ */
+
+body.single-product.jedda-pdp-v2 .de-slick-product-arrows {
+	display: none;
+}
+
+/* ============================================================
+   MAIN IMAGE — CLEAN DISPLAY
+   Remove crosshair cursor that appears on hover.
+   A garment image is not a document. The cursor implied zoom
+   interaction that no longer exists or fits JEDDA's tone.
+   ============================================================ */
+
+body.single-product.jedda-pdp-v2 .de-product-single__images .woocommerce-main-image:hover {
+	cursor: default;
+}
+
+body.single-product.jedda-pdp-v2 .de-product-single__images img.images-slick {
 	display: block;
 	width: 100%;
 	height: auto;
-	background: var(--jedda-pdp-soft);
 }
 
-body.single-product.jedda-pdp-v2 .woocommerce-product-gallery__wrapper {
-	margin: 0;
-}
+/* ============================================================
+   MOBILE IMAGE COUNTER
+   Injected by pdp-v2.js via Slick afterChange listener.
+   Hidden on desktop (thumbnail strip handles navigation).
+   Shown below the image area on mobile only.
 
-body.single-product.jedda-pdp-v2 .woocommerce-product-gallery .flex-control-thumbs {
-	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	gap: var(--jedda-pdp-gap-xs);
-	margin-top: var(--jedda-pdp-gap-sm);
-}
+   Format: "1 / 6" — numeric, minimal, aria-hidden.
 
-body.single-product.jedda-pdp-v2 .woocommerce-product-gallery .flex-control-thumbs li {
-	width: auto;
-	float: none;
-}
+   Reference influence: at this scale of minimalism, nothing in
+   the references shows explicit counters. But JEDDA's mobile
+   gallery has zero navigation affordance after thumbnails are
+   hidden (custom.css hides them at ≤768px). A quiet counter
+   below the image solves the problem without adding chrome.
+   ============================================================ */
 
-body.single-product.jedda-pdp-v2 .summary {
-	float: none;
-	width: 100%;
-	max-width: 520px;
-	color: var(--jedda-pdp-ink);
-}
-
-body.single-product.jedda-pdp-v2 .summary .product_title,
-body.single-product.jedda-pdp-v2 .summary h1.product_title {
-	margin: 0 0 var(--jedda-pdp-gap-sm);
-	font-size: clamp(20px, 2vw, 28px);
-	font-weight: 400;
-	line-height: 1.25;
-	letter-spacing: 0;
-	text-transform: none;
-}
-
-body.single-product.jedda-pdp-v2 .summary .price {
-	margin: 0 0 var(--jedda-pdp-gap-lg);
-	color: var(--jedda-pdp-ink);
-	font-size: 14px;
-	font-weight: 400;
-	line-height: 1.45;
-	letter-spacing: 0;
-}
-
-body.single-product.jedda-pdp-v2 .woocommerce-product-details__short-description,
-body.single-product.jedda-pdp-v2 .summary .product_meta {
-	color: var(--jedda-pdp-muted);
-	font-size: 13px;
-	line-height: 1.7;
-	letter-spacing: 0;
-}
-
-body.single-product.jedda-pdp-v2 form.cart,
-body.single-product.jedda-pdp-v2 form.variations_form {
-	margin-top: var(--jedda-pdp-gap-lg);
-	margin-bottom: var(--jedda-pdp-gap-lg);
-}
-
-body.single-product.jedda-pdp-v2 table.variations {
-	width: 100%;
-	margin: 0 0 var(--jedda-pdp-gap-md);
-	border: 0;
-}
-
-body.single-product.jedda-pdp-v2 table.variations tbody,
-body.single-product.jedda-pdp-v2 table.variations tr,
-body.single-product.jedda-pdp-v2 table.variations th,
-body.single-product.jedda-pdp-v2 table.variations td {
-	display: block;
-	width: 100%;
-	padding: 0;
-	border: 0;
-	text-align: left;
-}
-
-body.single-product.jedda-pdp-v2 table.variations tr + tr {
-	margin-top: var(--jedda-pdp-gap-md);
-}
-
-body.single-product.jedda-pdp-v2 table.variations label,
-body.single-product.jedda-pdp-v2 .summary label {
-	display: block;
-	margin: 0 0 var(--jedda-pdp-gap-xs);
-	color: var(--jedda-pdp-ink);
+body.single-product.jedda-pdp-v2 .jedda-gallery-counter {
+	display: none;
+	text-align: center;
 	font-size: 11px;
 	font-weight: 400;
-	line-height: 1.4;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-}
-
-body.single-product.jedda-pdp-v2 table.variations select {
-	width: 100%;
-	min-height: 44px;
-	border: 1px solid var(--jedda-pdp-line);
-	border-radius: 0;
-	background-color: transparent;
-	color: var(--jedda-pdp-ink);
-	font-size: 13px;
-	line-height: 1.4;
-}
-
-body.single-product.jedda-pdp-v2 .variable-items-wrapper,
-body.single-product.jedda-pdp-v2 .woo-variation-items-wrapper {
-	gap: var(--jedda-pdp-gap-xs);
-}
-
-body.single-product.jedda-pdp-v2 .variable-item,
-body.single-product.jedda-pdp-v2 .button-variable-item,
-body.single-product.jedda-pdp-v2 .color-variable-item {
-	border-radius: 0;
-	box-shadow: none;
-	transition: border-color 150ms ease, opacity 150ms ease, background-color 150ms ease;
-}
-
-body.single-product.jedda-pdp-v2 .variable-item.selected,
-body.single-product.jedda-pdp-v2 .variable-item:focus-visible,
-body.single-product.jedda-pdp-v2 .button-variable-item.selected,
-body.single-product.jedda-pdp-v2 .button-variable-item:focus-visible,
-body.single-product.jedda-pdp-v2 .color-variable-item.selected,
-body.single-product.jedda-pdp-v2 .color-variable-item:focus-visible {
-	outline: 1px solid var(--jedda-pdp-ink);
-	outline-offset: 2px;
-}
-
-body.single-product.jedda-pdp-v2 .single_add_to_cart_button,
-body.single-product.jedda-pdp-v2 button.single_add_to_cart_button {
-	width: 100%;
-	min-height: 48px;
-	border-radius: 0;
-	border: 1px solid var(--jedda-pdp-ink);
-	background: var(--jedda-pdp-ink);
-	color: #fff;
-	font-size: 12px;
-	font-weight: 400;
+	letter-spacing: 0.08em;
+	color: var(--jedda-muted);
+	margin-top: 12px;
 	line-height: 1;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-	transition: background-color 150ms ease, color 150ms ease, opacity 150ms ease;
+	font-family: inherit;
+	user-select: none;
 }
 
-body.single-product.jedda-pdp-v2 .single_add_to_cart_button:hover,
-body.single-product.jedda-pdp-v2 .single_add_to_cart_button:focus-visible {
-	background: transparent;
-	color: var(--jedda-pdp-ink);
-}
-
-body.single-product.jedda-pdp-v2 .single_add_to_cart_button.disabled,
-body.single-product.jedda-pdp-v2 .single_add_to_cart_button.wc-variation-selection-needed,
-body.single-product.jedda-pdp-v2 .single_add_to_cart_button[disabled] {
-	opacity: 0.42;
-	cursor: not-allowed;
-}
-
-body.single-product.jedda-pdp-v2 .jedda-pdp-variant-notice,
-body.single-product.jedda-pdp-v2 .jedda-pdp-field-error,
-body.single-product.jedda-pdp-v2 .jedda-pdp-success-message {
-	margin-top: var(--jedda-pdp-gap-sm);
-	font-size: 12px;
-	font-weight: 400;
-	line-height: 1.5;
-	letter-spacing: 0;
-}
-
-body.single-product.jedda-pdp-v2 .jedda-pdp-variant-notice,
-body.single-product.jedda-pdp-v2 .jedda-pdp-field-error {
-	color: var(--jedda-pdp-error);
-}
-
-body.single-product.jedda-pdp-v2 .jedda-pdp-success-message {
-	color: var(--jedda-pdp-success);
-}
-
-body.single-product.jedda-pdp-v2 .product_meta,
-body.single-product.jedda-pdp-v2 .woocommerce-tabs,
-body.single-product.jedda-pdp-v2 .related,
-body.single-product.jedda-pdp-v2 .upsells {
-	margin-top: var(--jedda-pdp-gap-xl);
-}
-
-body.single-product.jedda-pdp-v2 .woocommerce-tabs {
-	border-top: 1px solid var(--jedda-pdp-line);
-	padding-top: var(--jedda-pdp-gap-lg);
-}
-
-body.single-product.jedda-pdp-v2 .woocommerce-tabs .tabs {
-	margin-bottom: var(--jedda-pdp-gap-md);
-}
-
-body.single-product.jedda-pdp-v2 .woocommerce-tabs .tabs li a,
-body.single-product.jedda-pdp-v2 .related > h2,
-body.single-product.jedda-pdp-v2 .upsells > h2 {
-	color: var(--jedda-pdp-ink);
-	font-size: 12px;
-	font-weight: 400;
-	line-height: 1.4;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-}
-
-body.single-product.jedda-pdp-v2 .related ul.products,
-body.single-product.jedda-pdp-v2 .upsells ul.products {
-	margin-top: var(--jedda-pdp-gap-lg);
-}
-
-@media (min-width: 992px) {
-	body.single-product.jedda-pdp-v2 .product {
-		max-width: min(1500px, calc(100vw - 72px));
-	}
-
-	body.single-product.jedda-pdp-v2 div.product {
-		display: grid;
-		grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
-		column-gap: var(--jedda-pdp-gap-xl);
-		align-items: start;
-	}
-
-	body.single-product.jedda-pdp-v2 .woocommerce-product-gallery,
-	body.single-product.jedda-pdp-v2 .summary {
-		float: none !important;
-		width: 100% !important;
-	}
-
-	body.single-product.jedda-pdp-v2 .summary {
-		position: sticky;
-		top: 96px;
-		margin-left: 0;
-		padding-top: var(--jedda-pdp-gap-sm);
-	}
-
-	body.single-product.jedda-pdp-v2 .woocommerce-tabs,
-	body.single-product.jedda-pdp-v2 .related,
-	body.single-product.jedda-pdp-v2 .upsells {
-		grid-column: 1 / -1;
-	}
-}
-
-@media (max-width: 767px) {
-	body.single-product.jedda-pdp-v2 .product {
-		max-width: calc(100vw - 24px);
-	}
-
-	body.single-product.jedda-pdp-v2 .summary {
-		max-width: none;
-	}
-
-	body.single-product.jedda-pdp-v2 .summary .product_title,
-	body.single-product.jedda-pdp-v2 .summary h1.product_title {
-		font-size: 20px;
-	}
-
-	body.single-product.jedda-pdp-v2 .single_add_to_cart_button,
-	body.single-product.jedda-pdp-v2 button.single_add_to_cart_button {
-		min-height: 52px;
+@media (max-width: 768px) {
+	body.single-product.jedda-pdp-v2 .jedda-gallery-counter {
+		display: block;
 	}
 }
