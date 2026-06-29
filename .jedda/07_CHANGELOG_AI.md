@@ -10,10 +10,13 @@ Record engineering work chronologically.
 - Documented the Sprint 2 PDP snippet incident and manual rollback.
 - Confirmed the failed Sprint 2 active snippet markers were no longer present in served PDP HTML.
 - Rechecked the logged-in browser/admin channel before reactivation; it still timed out before any snippet activation.
+- Re-established stability through the upgraded extension-backed Chrome environment.
+- Activated Code Snippets ID `13`: `JEDDA PDP Variant Validation - Sprint 2.1`.
+- Tested PDP invalid add-to-cart with no variant selected; inline color/size guidance appeared, no loading state stuck, and cart stayed `0`.
 - Recorded the likely observer-loop failure mode.
 - Established a safer event-based implementation path for the next PDP invalid-variant guard.
 - Added a kill-switch requirement for future staging frontend snippets before activation.
-- No website code, repository code, payment settings, checkout logic, products, orders, plugins, or database rows were changed.
+- No repository website code, payment settings, checkout logic, products, orders, plugins, or database rows were changed.
 
 ## 2026-06-28 — Batch 1 Operational Cleanup
 

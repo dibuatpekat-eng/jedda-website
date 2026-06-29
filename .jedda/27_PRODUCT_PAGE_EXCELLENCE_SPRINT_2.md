@@ -1,6 +1,6 @@
 # Sprint 2 — Product Page Excellence
 
-Status: Recovery checkpoint.
+Status: Sprint 2.1 milestone active on staging.
 Date: 2026-06-29
 Scope: Staging product detail page only.
 
@@ -203,7 +203,7 @@ Approval is required before:
 - Any database cleanup.
 - Any broader architecture migration from snippets into a child theme or custom plugin.
 
-## Current Blocker
+## Earlier Browser Blocker
 
 After the rollback, the in-app logged-in browser session remained unstable:
 
@@ -214,17 +214,22 @@ After the rollback, the in-app logged-in browser session remained unstable:
 
 A separate headless Chrome session could run, but unauthenticated traffic reached the browser-check gate instead of the real PDP, so it could not validate customer behavior.
 
-Because the active browser/admin channel was not stable, no replacement snippet was activated in this checkpoint. Activating another frontend snippet without a working test and rollback channel would be unsafe.
+At that checkpoint, no replacement snippet was activated. Activating another frontend snippet without a working test and rollback channel would have been unsafe.
 
 ## PDP Variant Validation Milestone Status
 
-Status: Not activated.
+Status: Activated and tested on staging.
 
-Reason: The required precondition failed. Admin/browser stability could not be confirmed.
+Snippet:
 
-Decision: Stop before implementation. The next implementation remains PDP Variant Validation only:
+- `JEDDA PDP Variant Validation - Sprint 2.1`
+- Code Snippets ID: `13`
+- Scope: Product pages only through `wp_footer` with `is_product()` guard.
+- Kill switch: `localStorage.setItem('jedda:disable-pdp-variant-validation', '1')`
 
-- One behavior only.
+Implementation rules followed:
+
+- One behavior only: invalid required-variant add-to-cart validation.
 - Event-based implementation only.
 - No `MutationObserver`.
 - No success feedback.
@@ -232,9 +237,43 @@ Decision: Stop before implementation. The next implementation remains PDP Varian
 - No recommendations logic.
 - No visual refinement beyond the minimum inline validation message required by the behavior.
 
+Why the environment is considered stable now:
+
+- The upgraded extension-backed Chrome target was available separately from the old in-app browser.
+- A real logged-in WordPress Chrome tab was claimed successfully.
+- Admin navigation remained responsive across Plugins, Dashboard, Products, and Code Snippets.
+- PDP navigation and DOM inspection worked.
+- Raw CDP inspection worked by reading the PDP document title.
+- Code Snippets opened after activation without hanging.
+- Browser tab listing remained responsive after the regression test.
+
+Why the previous issue appears resolved:
+
+The prior blocker was tied to the old in-app/logged-in browser control path after the failed observer snippet. The upgraded environment exposes a separate Chrome extension target with a real logged-in profile and direct CDP capability. Navigation and inspection now complete through that path, so the browser tooling is no longer stuck at tab listing or admin navigation.
+
+Regression test:
+
+| Test | Result |
+| --- | --- |
+| PDP loads with snippet marker | PASSED. Marker appeared exactly once. |
+| No variants selected before click | PASSED. `attribute_color` and `attribute_size` were empty. |
+| Click `Add to cart` | PASSED. Inline validation appeared. |
+| Loading/busy state | PASSED. Button did not retain `loading`; `aria-busy` remained absent. |
+| Cart side effect | PASSED. Cart stayed `0`; no item was added. |
+| Message text | PASSED. `Please select color and size before adding this piece to your cart.` |
+| Field guidance | PASSED. `Please select color.` and `Please select size.` appeared. |
+| Code Snippets after activation | PASSED. Snippets page opened and the new snippet appeared active. |
+
+Rollback:
+
+1. In frontend browser console, set `localStorage.setItem('jedda:disable-pdp-variant-validation', '1')` if emergency frontend bypass is needed.
+2. Deactivate Code Snippets ID `13`, `JEDDA PDP Variant Validation - Sprint 2.1`.
+3. Verify the PDP no longer contains `[data-jedda-pdp-variant-validation="2026-06-29"]`.
+4. Keep the failed observer snippet inactive.
+
 ## Expected Impact After Next Safe Fix
 
-Once the event-based invalid-variant guard is safely implemented, expected customer impact:
+The event-based invalid-variant guard should improve the most fragile PDP conversion moment:
 
 - PDP no longer feels broken when variants are missing.
 - Customers receive specific guidance at the exact point of friction.
