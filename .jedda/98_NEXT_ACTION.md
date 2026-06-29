@@ -1,59 +1,66 @@
 # Next Action
 
-Status: Awaiting Gallery V2 approval before next component.
+Status: Gallery V2.1 plan ready. Awaiting founder approval to implement.
 Last updated: 2026-06-29.
 
-## Immediate Next Step
+## Current Situation
 
-Gallery V2 has been implemented and pushed. It is not yet activated on staging.
+Gallery V2 is technically working on staging (verified via hard refresh):
+- Thumbnail rail: 12px indicator strip ✓
+- Arrows: hidden (display: none !important) ✓
+- Main image: 672px (from 544px) ✓
+- Mobile counter: injected ✓
 
-**Required before any further implementation:**
+Design verdict: directionally correct, not yet close enough to Toteme / SSSTEIN.
+Founder has not approved Gallery V2. V2.1 refinement plan is ready.
 
-1. Enable PDP V2 on staging for Gallery QA:
-   - Set `jedda_pdp_v2_enabled` option to `1` via WordPress admin → Settings → General → (WP option), or ask the AI engineer to do it via browser.
-2. Open a product page on staging while logged in.
-3. Review the gallery against the Toteme / SSSTEIN reference direction.
-4. Confirm or reject Gallery V2.
-5. Only after approval: move to Product Summary component.
+## LiteSpeed Cache Note
 
-## Gallery V2 Activation
+Gallery V2 CSS with arrow fix only visible after hard refresh (Ctrl+Shift+R).
+Normal page loads serve cached CSS (without !important on arrows).
+This is a staging deployment concern, not a code logic concern.
+To view Gallery V2 correctly on staging: hard refresh the product page.
 
-The plugin is installed on staging but deactivated. Two steps are needed:
+## Gallery V2.1 Plan
 
-Step 1 — Activate the plugin:
-- WordPress admin → Plugins → JEDDA Commerce UI → Activate.
+Three changes. No HTML changes. All scoped to `body.single-product.jedda-pdp-v2`.
 
-Step 2 — Enable PDP V2 feature flag:
-- WordPress admin → set `jedda_pdp_v2_enabled = 1`, or run:
-  `wp option update jedda_pdp_v2_enabled 1`
+### Change 1 — Thumbnail strip: left → right
+Move 12px indicator strip from left side to right side of image.
+Image starts flush at gallery column left edge. 20px visual gain, no awkward left float.
+```css
+.de-product-single__thumbnail--philo {
+  float: right; margin-right: 0; margin-left: 8px;
+}
+```
 
-To disable after QA:
-- `wp option update jedda_pdp_v2_enabled 0`
-- OR deactivate the plugin.
+### Change 2 — Remove gallery column left padding
+Foundation applies ~15px left padding to all columns. Removing it extends image
+further left, to the row edge (closer to viewport).
+```css
+.de-product-single__images-left-philo {
+  padding-left: 0;
+}
+```
+Risk: must verify mobile (Foundation handles padding differently at breakpoints).
 
-## Open Decision — Thumbnail Visibility
+### Change 3 — Deliberate top breathing room
+Replace clamp(8px, 1.5vw, 28px) with clamp(48px, 5vw, 80px).
+Current value reads as a gap. Larger value reads as a curated editorial entry.
+```css
+.de-product-single__images-left-philo {
+  padding-top: clamp(48px, 5vw, 80px);
+}
+```
 
-Gallery V2 hides thumbnail images entirely (12px indicator strip).
-If QA shows visible thumbnails are preferred, a fallback is documented in `32_GALLERY_V2_MILESTONE.md`.
+## After V2.1
 
-## After Gallery V2 Approval
-
-Next component: **Product Summary**.
-
-Scope:
-- Buy panel spacing and vertical rhythm.
-- Title and price hierarchy.
-- Short description placement.
-
-Not included in Product Summary:
-- Variant selector (separate component).
-- Add-to-cart (separate component).
-- Gallery (already done).
-- Cart, checkout, payment, stock.
+If V2.1 is approved: move to Product Summary component.
+If V2.1 is still insufficient: propose V2.2 (gallery column negative margin into row padding).
 
 ## PDP V2 Component Order
 
-1. Gallery ← IMPLEMENTED, awaiting approval
+1. Gallery ← V2 implemented, V2.1 plan ready, awaiting approval
 2. Product Summary
 3. Title & Price
 4. Variant Selector

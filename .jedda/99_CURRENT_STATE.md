@@ -42,6 +42,39 @@ Custom plugin:
 - `pdp-v2.js` — Mobile image counter (event-based, Slick afterChange).
 - PDP V2 disabled by default. Feature flag required to activate.
 
+## Gallery V2 — Implemented, QA Complete, Design Review Complete
+
+Gallery V2 was implemented and QA'd on 2026-06-29.
+Design review conducted. Verdict: technically correct, not yet close enough to Toteme/SSSTEIN.
+V2.1 refinement plan ready. Awaiting founder approval to implement.
+
+To view Gallery V2 correctly on staging: hard refresh (Ctrl+Shift+R) the product page.
+Normal page loads serve LiteSpeed-cached CSS (arrows visible, old layout).
+
+### Reverse Engineering — Now Complete
+
+CSS cascade for gallery arrows:
+- `dahz-framework-blog.css:28136` — base `.de-slick-product-arrows { display: flex }`
+- `dahz-framework-blog.css:27202` — philo-specific transform positioning
+- `dahz-framework-blog.css:27227` — `.de-product-single__images--philo:hover` → `opacity: 1`
+- `pdp-v2.css` — `display: none !important` removes all states
+
+Layout constraint: `.row` max-width 1280px centered → 116px side margins at 1512px viewport.
+Gallery column ceiling: ~712px (Foundation large-7). Image at 672px = 44.5% viewport. Toteme: 55-62%.
+HTML change required to exceed this ceiling. V2.1 stays within CSS-only.
+
+`df-commerce.js` confirmed: zero product gallery arrow manipulation. Safe.
+
+### Design Gap Analysis
+
+| Dimension | Current | Target (Toteme/SSSTEIN) |
+|---|---|---|
+| Image % of viewport | 44.5% | 55-62% |
+| Thumbnail position | left of image | right or none |
+| Arrows on image | visible (LiteSpeed cache) | zero chrome |
+| Top breathing room | 8-28px | 48-80px |
+| Whitespace feeling | default grid | curated |
+
 ## Gallery V2 — Implementation Complete, Awaiting QA
 
 Gallery V2 was implemented on 2026-06-29 by the Claude Code engineer.

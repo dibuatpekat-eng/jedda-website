@@ -2,6 +2,17 @@
 
 Record engineering work chronologically.
 
+## 2026-06-29 — Gallery V2 Design Review + V2.1 Plan (Claude Code workspace)
+
+- Conducted full design review of Gallery V2 against Toteme / SSSTEIN references.
+- Honest verdict: directionally correct, not yet close enough to approved design language.
+- Completed reverse engineering of arrow CSS cascade: base `display: flex` (dahz-framework-blog.css:28136), hover `opacity: 1` (line 27227). No JS manipulation in df-commerce.js.
+- Confirmed layout constraint: `.row` has `max-width: 1280px`, creates 116px side margins at 1512px viewport. This is the ceiling for image width without HTML changes.
+- Arrow visibility on normal page loads is a LiteSpeed cache deployment issue, not a CSS logic issue. `display: none !important` rule is correct.
+- Arrow fix committed (9a7e22d) and pushed. Only visible after LiteSpeed cache refresh.
+- Identified three V2.1 refinements: thumbnail strip to right, gallery left padding removal, increased top breathing room.
+- Documentation updated. Awaiting founder approval to proceed with V2.1.
+
 ## 2026-06-29 — Gallery V2 Implementation (Claude Code workspace)
 
 - Completed full Gallery V2 reverse engineering from live staging DOM inspection.
