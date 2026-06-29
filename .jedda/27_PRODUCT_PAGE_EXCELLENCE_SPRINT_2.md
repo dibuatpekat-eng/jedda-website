@@ -271,13 +271,66 @@ Rollback:
 3. Verify the PDP no longer contains `[data-jedda-pdp-variant-validation="2026-06-29"]`.
 4. Keep the failed observer snippet inactive.
 
-## Expected Impact After Next Safe Fix
+## PDP Loading Feedback Milestone Status
 
-The event-based invalid-variant guard should improve the most fragile PDP conversion moment:
+Status: Activated and tested on staging.
+
+Final active snippet:
+
+- `JEDDA PDP Loading Feedback - Sprint 2.2 Active`
+- Code Snippets ID: `18`
+- Scope: Product pages only through `wp_footer` with `is_product()` guard.
+- Kill switch: `localStorage.setItem('jedda:disable-pdp-loading-feedback', '1')`
+
+Superseded attempts:
+
+- Code Snippets ID `14`: deactivated. Direct listener cleared too early.
+- Code Snippets ID `15`: deactivated. Direct listener remained too fragile after variation state changes.
+- Code Snippets ID `16`: deactivated. Delegated listener still did not initialize reliably enough.
+- Code Snippets ID `17`: deactivated. XHR completion approach printed but needed load/pageshow-safe initialization.
+
+Implementation rules followed:
+
+- One behavior only: valid add-to-cart loading/busy feedback.
+- Event-based implementation only: delegated form click/submit, `pageshow`, native XHR `loadend`, and add-to-cart completion events.
+- No `MutationObserver`.
+- No recommendations changes.
+- No global PDP redesign.
+- No checkout/cart logic changes.
+- Minimal visual treatment: button opacity/cursor, `Adding...` text, and `aria-busy`.
+
+Why the final approach was chosen:
+
+The PDP variation form and theme/Woo scripts can update the add-to-cart button after variation selection. A direct button listener was too fragile. The final snippet initializes idempotently on page lifecycle events, uses delegated form-level capture so it can survive button updates, and clears only after an add-to-cart request completes.
+
+Regression test:
+
+| Test | Result |
+| --- | --- |
+| Existing commits pushed before work | PASSED. `origin/main` was updated before 2.2 started. |
+| Code Snippets and PDP precheck | PASSED. Admin and PDP remained responsive in extension-backed Chrome. |
+| PDP markers | PASSED. Variant validation marker `1`; loading feedback marker `1`. |
+| Invalid variant click | PASSED. 2.1 validation still owns the missing-variant state; no loading/busy state appeared. |
+| Valid variation selection | PASSED. `Breen` + `S/M` selected and variation ID `13113` resolved. |
+| Valid add-to-cart immediate state | PASSED. Button changed to `Adding...`, gained `aria-busy="true"`, and gained `jedda-pdp-is-adding`. |
+| Valid add-to-cart completion | PASSED. Button restored to `Add to cart`, `aria-busy` was removed, and cart count updated. |
+| Code Snippets after activation | PASSED. Snippets page remained responsive and both Sprint snippets were visible. |
+
+Rollback:
+
+1. In frontend browser console, set `localStorage.setItem('jedda:disable-pdp-loading-feedback', '1')` if emergency frontend bypass is needed.
+2. Deactivate Code Snippets ID `18`, `JEDDA PDP Loading Feedback - Sprint 2.2 Active`.
+3. Verify the PDP no longer contains `[data-jedda-pdp-loading-feedback="2026-06-29"]`.
+4. Keep superseded snippets `14`, `15`, `16`, and `17` inactive.
+
+## Expected Impact So Far
+
+The event-based invalid-variant guard and loading feedback should improve the most fragile PDP conversion moments:
 
 - PDP no longer feels broken when variants are missing.
 - Customers receive specific guidance at the exact point of friction.
 - The add-to-cart button state recovers immediately.
+- Valid add-to-cart now gives immediate busy feedback instead of feeling inert.
 - The product page moves closer to the JEDDA design principle that every interaction should feel calm, intentional, and reassuring.
 
 ## Rollback Plan For Next Attempt
@@ -292,10 +345,6 @@ If the next event-based snippet causes issues:
 
 ## Follow-Up Recommendation
 
-Before continuing implementation, recover a stable logged-in admin/browser channel, then restart with Step 1 only.
+For the next Sprint 2 milestone, continue with one behavior only and keep each implementation isolated in its own reversible snippet until the PDP behavior is migrated into a cleaner version-controlled layer.
 
-The next fix should be named clearly, for example:
-
-`JEDDA PDP Variant Guard - Sprint 2`
-
-It should not reuse the failed `JEDDA PDP Interaction Polish - Sprint 2 Active` snippet.
+Do not reuse the failed `JEDDA PDP Interaction Polish - Sprint 2 Active` snippet.

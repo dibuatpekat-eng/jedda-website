@@ -13,6 +13,11 @@ Record engineering work chronologically.
 - Re-established stability through the upgraded extension-backed Chrome environment.
 - Activated Code Snippets ID `13`: `JEDDA PDP Variant Validation - Sprint 2.1`.
 - Tested PDP invalid add-to-cart with no variant selected; inline color/size guidance appeared, no loading state stuck, and cart stayed `0`.
+- Pushed existing commits to `origin/main` before starting Milestone 2.2.
+- Activated Code Snippets ID `18`: `JEDDA PDP Loading Feedback - Sprint 2.2 Active`.
+- Deactivated superseded loading-feedback attempts in Code Snippets IDs `14`, `15`, `16`, and `17`.
+- Tested invalid variant flow after 2.2; validation still owned the missing-variant state and no loading feedback appeared.
+- Tested valid add-to-cart flow after 2.2; button changed to `Adding...` with `aria-busy="true"` and recovered after cart update.
 - Recorded the likely observer-loop failure mode.
 - Established a safer event-based implementation path for the next PDP invalid-variant guard.
 - Added a kill-switch requirement for future staging frontend snippets before activation.
