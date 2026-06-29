@@ -1,6 +1,6 @@
 # Product Page V2 Milestone 2.6
 
-Status: First safe V2 implementation milestone completed in Git.
+Status: Failed visual attempt recovered on staging.
 Date: 2026-06-29
 Scope: Custom plugin foundation plus initial PDP V2 presentation layer.
 
@@ -39,7 +39,6 @@ Server-side enable:
 
 - `define('JEDDA_PDP_V2_ENABLED', true)`
 - or `update_option('jedda_pdp_v2_enabled', '1')`
-- or staging host `beta.jeddawear.com`
 
 Browser emergency kill switch:
 
@@ -88,14 +87,14 @@ Local verification completed:
 | `MutationObserver` scan | PASSED. No implementation use found. |
 | Checkout/payment/shipping logic scan | PASSED. Only guardrail comments/README references found. |
 | PHP lint | NOT RUN. Local `php` command is unavailable in this environment. |
-| Live staging activation | NOT RUN in this milestone. Requires WordPress plugin deployment/activation path. |
+| Live staging activation | FAILED VISUAL QA. Plugin was installed/activated, but visual CSS compressed the PDP and made the page worse than the original. Plugin was then deactivated on staging. |
 
 ## Activation Test Required On Staging
 
 Before considering PDP V2 visually validated in the browser:
 
 1. Deploy/sync the plugin to staging.
-2. Activate `JEDDA Commerce UI`.
+2. Activate `JEDDA Commerce UI` only with server-side PDP V2 explicitly enabled.
 3. Open a variable product PDP.
 4. Confirm `jedda-pdp-v2` appears on `body`.
 5. Confirm PDP V2 CSS and JS assets load only on product pages.
@@ -117,7 +116,7 @@ Rollback options:
 3. Deactivate the `JEDDA Commerce UI` plugin.
 4. Revert the Git commit.
 
-Because this milestone does not replace WooCommerce templates or deactivate Sprint 2 snippets, the current functional PDP remains the fallback.
+Because this milestone does not replace WooCommerce templates or deactivate Sprint 2 snippets, the current functional PDP remains the fallback. Staging was recovered by deactivating `JEDDA Commerce UI`.
 
 ## Next Recommended Milestone
 

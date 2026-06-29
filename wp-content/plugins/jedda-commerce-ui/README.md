@@ -9,8 +9,7 @@ Milestone 2.6 starts Product Page V2 as a product-page-only enhancement module. 
 PDP V2 is enabled only when:
 
 - `JEDDA_PDP_V2_ENABLED` is defined as `true`, or
-- the `jedda_pdp_v2_enabled` option is set to `1`, or
-- the site host is `beta.jeddawear.com`.
+- the `jedda_pdp_v2_enabled` option is set to `1`.
 
 PDP V2 is disabled when:
 
@@ -19,6 +18,8 @@ PDP V2 is disabled when:
 - browser localStorage contains `jedda:disable-pdp-v2 = 1`.
 
 The browser kill switch is intentionally secondary. The server-side constant or option is the preferred rollback path.
+
+PDP V2 is disabled by default. Do not auto-enable by staging hostname.
 
 ## Scope Guardrails
 

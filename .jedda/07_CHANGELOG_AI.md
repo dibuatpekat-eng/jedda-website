@@ -29,6 +29,10 @@ Record engineering work chronologically.
 - Added product-page-only PDP V2 asset loading, feature flags, and kill switches.
 - Added the first scoped PDP V2 presentation layer for layout rhythm, typography, image/gallery treatment, variant section, add-to-cart styling, and Sprint feedback styling.
 - Verified the PDP V2 JavaScript syntax with `node --check`; PHP lint was not available locally.
+- Deactivated `JEDDA Commerce UI` on staging after visual QA showed the first PDP V2 CSS attempt compressed/broke the product page.
+- Reclassified the first PDP V2 visual attempt as failed, not successful.
+- Updated the plugin so PDP V2 is disabled by default and no longer auto-enables on `beta.jeddawear.com`.
+- Added `31_PRODUCT_PAGE_V2_VISUAL_RECOVERY.md` with recovery status, failure analysis, and the real Upscale PDP DOM selector map.
 - Recorded the likely observer-loop failure mode.
 - Established a safer event-based implementation path for the next PDP invalid-variant guard.
 - Added a kill-switch requirement for future staging frontend snippets before activation.

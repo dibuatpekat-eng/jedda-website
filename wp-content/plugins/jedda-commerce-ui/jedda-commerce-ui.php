@@ -28,7 +28,6 @@ define('JEDDA_COMMERCE_UI_URL', plugin_dir_url(__FILE__));
  * Enable switches:
  * - define('JEDDA_PDP_V2_ENABLED', true)
  * - update_option('jedda_pdp_v2_enabled', '1')
- * - beta.jeddawear.com staging host
  *
  * @return bool
  */
@@ -51,10 +50,7 @@ function jedda_commerce_ui_is_pdp_v2_enabled() {
 		return (bool) apply_filters('jedda_pdp_v2_enabled', (bool) JEDDA_PDP_V2_ENABLED);
 	}
 
-	$host = wp_parse_url(home_url(), PHP_URL_HOST);
-	$is_staging_host = is_string($host) && false !== stripos($host, 'beta.jeddawear.com');
-
-	return (bool) apply_filters('jedda_pdp_v2_enabled', $is_staging_host);
+	return (bool) apply_filters('jedda_pdp_v2_enabled', false);
 }
 
 /**
