@@ -2,6 +2,16 @@
 
 Record engineering work chronologically.
 
+## 2026-06-29 — Sprint 2 Product Page Excellence Recovery Checkpoint
+
+- Added `27_PRODUCT_PAGE_EXCELLENCE_SPRINT_2.md`.
+- Documented the Sprint 2 PDP snippet incident and manual rollback.
+- Confirmed the failed Sprint 2 active snippet markers were no longer present in served PDP HTML.
+- Recorded the likely observer-loop failure mode.
+- Established a safer event-based implementation path for the next PDP invalid-variant guard.
+- Added a kill-switch requirement for future staging frontend snippets before activation.
+- No website code, repository code, payment settings, checkout logic, products, orders, plugins, or database rows were changed.
+
 ## 2026-06-28 — Batch 1 Operational Cleanup
 
 - Added `26_OPERATIONAL_CLEANUP_BATCH_1.md`.
