@@ -1,0 +1,305 @@
+/**
+ * JEDDA Product Page V2 Foundation
+ *
+ * Scope: body.single-product.jedda-pdp-v2 only.
+ * Goal: begin replacing the inherited PDP presentation layer while preserving
+ * WooCommerce commerce behavior, cart, checkout, payment, shipping, and orders.
+ */
+
+body.single-product.jedda-pdp-v2 {
+	--jedda-pdp-ink: #171717;
+	--jedda-pdp-muted: #686868;
+	--jedda-pdp-soft: #f6f5f2;
+	--jedda-pdp-line: #d9d7d1;
+	--jedda-pdp-success: #4d5548;
+	--jedda-pdp-error: #7a3d35;
+	--jedda-pdp-gap-xs: 8px;
+	--jedda-pdp-gap-sm: 12px;
+	--jedda-pdp-gap-md: 20px;
+	--jedda-pdp-gap-lg: 32px;
+	--jedda-pdp-gap-xl: clamp(44px, 6vw, 88px);
+	color: var(--jedda-pdp-ink);
+}
+
+body.single-product.jedda-pdp-v2 .product {
+	max-width: min(1440px, calc(100vw - 40px));
+	margin-inline: auto;
+}
+
+body.single-product.jedda-pdp-v2 div.product {
+	position: relative;
+}
+
+body.single-product.jedda-pdp-v2 div.product::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-product-gallery {
+	float: none;
+	width: 100%;
+	margin-bottom: var(--jedda-pdp-gap-lg);
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-product-gallery img {
+	display: block;
+	width: 100%;
+	height: auto;
+	background: var(--jedda-pdp-soft);
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-product-gallery__wrapper {
+	margin: 0;
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-product-gallery .flex-control-thumbs {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--jedda-pdp-gap-xs);
+	margin-top: var(--jedda-pdp-gap-sm);
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-product-gallery .flex-control-thumbs li {
+	width: auto;
+	float: none;
+}
+
+body.single-product.jedda-pdp-v2 .summary {
+	float: none;
+	width: 100%;
+	max-width: 520px;
+	color: var(--jedda-pdp-ink);
+}
+
+body.single-product.jedda-pdp-v2 .summary .product_title,
+body.single-product.jedda-pdp-v2 .summary h1.product_title {
+	margin: 0 0 var(--jedda-pdp-gap-sm);
+	font-size: clamp(20px, 2vw, 28px);
+	font-weight: 400;
+	line-height: 1.25;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+body.single-product.jedda-pdp-v2 .summary .price {
+	margin: 0 0 var(--jedda-pdp-gap-lg);
+	color: var(--jedda-pdp-ink);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.45;
+	letter-spacing: 0;
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-product-details__short-description,
+body.single-product.jedda-pdp-v2 .summary .product_meta {
+	color: var(--jedda-pdp-muted);
+	font-size: 13px;
+	line-height: 1.7;
+	letter-spacing: 0;
+}
+
+body.single-product.jedda-pdp-v2 form.cart,
+body.single-product.jedda-pdp-v2 form.variations_form {
+	margin-top: var(--jedda-pdp-gap-lg);
+	margin-bottom: var(--jedda-pdp-gap-lg);
+}
+
+body.single-product.jedda-pdp-v2 table.variations {
+	width: 100%;
+	margin: 0 0 var(--jedda-pdp-gap-md);
+	border: 0;
+}
+
+body.single-product.jedda-pdp-v2 table.variations tbody,
+body.single-product.jedda-pdp-v2 table.variations tr,
+body.single-product.jedda-pdp-v2 table.variations th,
+body.single-product.jedda-pdp-v2 table.variations td {
+	display: block;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	text-align: left;
+}
+
+body.single-product.jedda-pdp-v2 table.variations tr + tr {
+	margin-top: var(--jedda-pdp-gap-md);
+}
+
+body.single-product.jedda-pdp-v2 table.variations label,
+body.single-product.jedda-pdp-v2 .summary label {
+	display: block;
+	margin: 0 0 var(--jedda-pdp-gap-xs);
+	color: var(--jedda-pdp-ink);
+	font-size: 11px;
+	font-weight: 400;
+	line-height: 1.4;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+body.single-product.jedda-pdp-v2 table.variations select {
+	width: 100%;
+	min-height: 44px;
+	border: 1px solid var(--jedda-pdp-line);
+	border-radius: 0;
+	background-color: transparent;
+	color: var(--jedda-pdp-ink);
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+body.single-product.jedda-pdp-v2 .variable-items-wrapper,
+body.single-product.jedda-pdp-v2 .woo-variation-items-wrapper {
+	gap: var(--jedda-pdp-gap-xs);
+}
+
+body.single-product.jedda-pdp-v2 .variable-item,
+body.single-product.jedda-pdp-v2 .button-variable-item,
+body.single-product.jedda-pdp-v2 .color-variable-item {
+	border-radius: 0;
+	box-shadow: none;
+	transition: border-color 150ms ease, opacity 150ms ease, background-color 150ms ease;
+}
+
+body.single-product.jedda-pdp-v2 .variable-item.selected,
+body.single-product.jedda-pdp-v2 .variable-item:focus-visible,
+body.single-product.jedda-pdp-v2 .button-variable-item.selected,
+body.single-product.jedda-pdp-v2 .button-variable-item:focus-visible,
+body.single-product.jedda-pdp-v2 .color-variable-item.selected,
+body.single-product.jedda-pdp-v2 .color-variable-item:focus-visible {
+	outline: 1px solid var(--jedda-pdp-ink);
+	outline-offset: 2px;
+}
+
+body.single-product.jedda-pdp-v2 .single_add_to_cart_button,
+body.single-product.jedda-pdp-v2 button.single_add_to_cart_button {
+	width: 100%;
+	min-height: 48px;
+	border-radius: 0;
+	border: 1px solid var(--jedda-pdp-ink);
+	background: var(--jedda-pdp-ink);
+	color: #fff;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	transition: background-color 150ms ease, color 150ms ease, opacity 150ms ease;
+}
+
+body.single-product.jedda-pdp-v2 .single_add_to_cart_button:hover,
+body.single-product.jedda-pdp-v2 .single_add_to_cart_button:focus-visible {
+	background: transparent;
+	color: var(--jedda-pdp-ink);
+}
+
+body.single-product.jedda-pdp-v2 .single_add_to_cart_button.disabled,
+body.single-product.jedda-pdp-v2 .single_add_to_cart_button.wc-variation-selection-needed,
+body.single-product.jedda-pdp-v2 .single_add_to_cart_button[disabled] {
+	opacity: 0.42;
+	cursor: not-allowed;
+}
+
+body.single-product.jedda-pdp-v2 .jedda-pdp-variant-notice,
+body.single-product.jedda-pdp-v2 .jedda-pdp-field-error,
+body.single-product.jedda-pdp-v2 .jedda-pdp-success-message {
+	margin-top: var(--jedda-pdp-gap-sm);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.5;
+	letter-spacing: 0;
+}
+
+body.single-product.jedda-pdp-v2 .jedda-pdp-variant-notice,
+body.single-product.jedda-pdp-v2 .jedda-pdp-field-error {
+	color: var(--jedda-pdp-error);
+}
+
+body.single-product.jedda-pdp-v2 .jedda-pdp-success-message {
+	color: var(--jedda-pdp-success);
+}
+
+body.single-product.jedda-pdp-v2 .product_meta,
+body.single-product.jedda-pdp-v2 .woocommerce-tabs,
+body.single-product.jedda-pdp-v2 .related,
+body.single-product.jedda-pdp-v2 .upsells {
+	margin-top: var(--jedda-pdp-gap-xl);
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-tabs {
+	border-top: 1px solid var(--jedda-pdp-line);
+	padding-top: var(--jedda-pdp-gap-lg);
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-tabs .tabs {
+	margin-bottom: var(--jedda-pdp-gap-md);
+}
+
+body.single-product.jedda-pdp-v2 .woocommerce-tabs .tabs li a,
+body.single-product.jedda-pdp-v2 .related > h2,
+body.single-product.jedda-pdp-v2 .upsells > h2 {
+	color: var(--jedda-pdp-ink);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.4;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+body.single-product.jedda-pdp-v2 .related ul.products,
+body.single-product.jedda-pdp-v2 .upsells ul.products {
+	margin-top: var(--jedda-pdp-gap-lg);
+}
+
+@media (min-width: 992px) {
+	body.single-product.jedda-pdp-v2 .product {
+		max-width: min(1500px, calc(100vw - 72px));
+	}
+
+	body.single-product.jedda-pdp-v2 div.product {
+		display: grid;
+		grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
+		column-gap: var(--jedda-pdp-gap-xl);
+		align-items: start;
+	}
+
+	body.single-product.jedda-pdp-v2 .woocommerce-product-gallery,
+	body.single-product.jedda-pdp-v2 .summary {
+		float: none !important;
+		width: 100% !important;
+	}
+
+	body.single-product.jedda-pdp-v2 .summary {
+		position: sticky;
+		top: 96px;
+		margin-left: 0;
+		padding-top: var(--jedda-pdp-gap-sm);
+	}
+
+	body.single-product.jedda-pdp-v2 .woocommerce-tabs,
+	body.single-product.jedda-pdp-v2 .related,
+	body.single-product.jedda-pdp-v2 .upsells {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (max-width: 767px) {
+	body.single-product.jedda-pdp-v2 .product {
+		max-width: calc(100vw - 24px);
+	}
+
+	body.single-product.jedda-pdp-v2 .summary {
+		max-width: none;
+	}
+
+	body.single-product.jedda-pdp-v2 .summary .product_title,
+	body.single-product.jedda-pdp-v2 .summary h1.product_title {
+		font-size: 20px;
+	}
+
+	body.single-product.jedda-pdp-v2 .single_add_to_cart_button,
+	body.single-product.jedda-pdp-v2 button.single_add_to_cart_button {
+		min-height: 52px;
+	}
+}

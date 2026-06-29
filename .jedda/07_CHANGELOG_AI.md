@@ -22,10 +22,17 @@ Record engineering work chronologically.
 - Evaluated success-feedback alternatives and selected subtle inline confirmation as the best fit for JEDDA's premium product-page experience.
 - Owner manually verified staging PDP access, invalid/valid add-to-cart behavior, success feedback, and Code Snippets admin responsiveness in Chrome.
 - Recorded the remaining Codex browser/CDP timeout as a tooling issue rather than a website issue.
+- Added `28_PRODUCT_PAGE_V2_PLAN.md` to define the approved Product Page V2 design direction before coding visual changes.
+- Added `29_PRODUCT_PAGE_V2_IMPLEMENTATION_STRATEGY.md` and selected a small custom site plugin as the safest PDP V2 implementation path.
+- Added `30_PRODUCT_PAGE_V2_MILESTONE_2_6.md`.
+- Created the first Git-owned custom plugin module: `wp-content/plugins/jedda-commerce-ui`.
+- Added product-page-only PDP V2 asset loading, feature flags, and kill switches.
+- Added the first scoped PDP V2 presentation layer for layout rhythm, typography, image/gallery treatment, variant section, add-to-cart styling, and Sprint feedback styling.
+- Verified the PDP V2 JavaScript syntax with `node --check`; PHP lint was not available locally.
 - Recorded the likely observer-loop failure mode.
 - Established a safer event-based implementation path for the next PDP invalid-variant guard.
 - Added a kill-switch requirement for future staging frontend snippets before activation.
-- No repository website code, payment settings, checkout logic, products, orders, plugins, or database rows were changed.
+- No payment settings, checkout logic, cart logic, products, orders, customer data, plugin settings, or database rows were changed.
 
 ## 2026-06-28 — Batch 1 Operational Cleanup
 
