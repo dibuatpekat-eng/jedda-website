@@ -2,6 +2,82 @@
 
 Record engineering work chronologically.
 
+## 2026-06-29 — Milestone 2.8.2 — Product Summary V2 Blueprint (Claude Code workspace)
+
+Complete design specification. No staging changes. No code written.
+
+### Typography System — Plus Jakarta Sans
+
+Approved by founder. Self-hosted via plugin. 4 weights (300/400/500/600), WOFF2 only, `font-display: swap`, preload for 400+500.
+
+Full type scale defined: 10px–20px range. Product title: PJS 600 / 20px / lh 1.25 / ls 0.02em. Price: 14px / 400. Labels (COLOR, SIZE, accordion tabs): 10px / 500 / uppercase / ls 0.10em. Body: 13px / 300 / lh 1.7. Measurements: 11px / 400.
+
+Color tokens: `--jedda-ink` #171717, `--jedda-muted` #686868, `--jedda-ghost` #a0a0a0, `--jedda-line` #d9d7d1, `--jedda-soft` #f6f5f2, `--jedda-error` #c0392b.
+
+Uppercase restricted to: section labels, button text, measurement headers. Never: title, body copy, price, variant values.
+
+### Spacing System
+
+Base unit 8px. 10 spacing tokens (--space-1 through --space-10). Full vertical rhythm defined for summary column.
+
+### Component Specifications
+
+All components fully specified: breadcrumb, title, price (regular + sale + range), COLOR/SIZE variant selectors, swatch states (default/selected/hover/OOS), quantity (de-emphasized), ADD TO BAG (filled/primary), BUY NOW (outline/secondary), accordion (multi-open, all closed by default, ARIA-correct).
+
+Key changes from current:
+- Accordion moved BELOW ATC buttons (hierarchy: variants → action → reference)
+- Multi-open accordion (was exclusive-open)
+- All panels closed by default (was Details open)
+- Button label: "Add to Bag" (was "Add to cart")
+- Product title: `<h1>` (was `<h2>`)
+- Size Guide link next to SIZE label → opens Fit & Sizing panel
+- Network error state added (currently unhandled)
+- Swatch min touch target: 44px height on mobile (WCAG AA)
+
+### Interaction States
+
+Full state matrix documented: default/hover/focus/active/disabled/loading/error/success for every interactive element.
+
+Animation: 120–280ms ease only. No spring, bounce, scale, rotation except accordion chevron (220ms). No page-load animations.
+
+### Accessibility
+
+WCAG AA throughout: contrast ratios documented, keyboard navigation order defined, full ARIA semantic map, focus-visible always visible.
+
+### Responsive + Sticky
+
+Desktop: `position: sticky` on summary column, top = header height + 24px.
+Mobile (≤768px): normal flow, all panels closed, touch targets 44px.
+Breakpoint: Foundation large (1024px+).
+
+Sticky blocker: Foundation may use floats — requires container display audit in 2.8.3.
+
+### CMS Data Map
+
+Every content element mapped to architecture:
+- WC native: title, price, stock, color, size, variations
+- WC global attribute: material (`pa_material`)
+- ACF Pro per-product: details text, care instructions, size measurements (repeater), recommended body size (repeater)
+- ACF Options Page: shipping policy, returns policy, size exchange policy, pre-order policy
+- Custom taxonomy `jedda_badge`: Pre-Order, New Arrival, Restocked (replaces WPCode badge snippets)
+
+### Plugin Directory Restructure (Planned for 2.8.3)
+
+Single-file plugin → class-based directory structure with includes/, templates/, assets/fonts/, acf-json/. Required before implementation complexity increases.
+
+### Environment Blockers Documented
+
+1. ACF Pro not installed (blocks 2.8.4)
+2. WPCode #11836 unnamed (unknown PDP impact)
+3. Sticky requires container flexbox audit
+4. `<h1>` product title requires hook override
+
+### Files Created
+
+- `.jedda/35_PRODUCT_SUMMARY_V2_BLUEPRINT.md` — complete specification
+
+---
+
 ## 2026-06-29 — Milestone 2.8.1 — Product Summary V2 Architecture (Claude Code workspace)
 
 Architecture design only. No implementation. No staging changes.

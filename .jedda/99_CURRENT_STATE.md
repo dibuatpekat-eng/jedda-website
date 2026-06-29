@@ -155,25 +155,60 @@ Milestones 2.8.0 and 2.8.1 complete. Full docs: `.jedda/33_PRODUCT_SUMMARY_REVER
 
 **Migration:** 5 phases — Foundation → Content Migration (1 product) → Template → Typography → Rollout. Feature flag active throughout. `post_excerpt` not deleted until Phase 5 approved.
 
-### Decisions Required from Founder
+### Architecture Decisions — Status
 
-| # | Decision | Recommendation |
+| # | Decision | Status |
 |---|---|---|
-| 1 | Data architecture | ACF Pro |
-| 2 | Typography | Cormorant Garamond + Inter (or Plus Jakarta Sans if single-typeface) |
-| 3 | Shipping & Returns | ACF Options Page (global) |
-| 4 | Material composition | WC attribute `pa_material` |
-| 5 | WPCode #11836 | Review + name before V2 |
-| 6 | Post excerpt | Plain-text marketing blurb |
+| 1 | Data architecture | ✅ ACF Pro approved |
+| 2 | Typography | ✅ Plus Jakarta Sans approved (self-hosted) |
+| 3 | Shipping & Returns | ✅ ACF Options Page (global) approved |
+| 4 | Material composition | ✅ WC attribute `pa_material` approved |
+| 5 | WPCode #11836 | ⚠️ Owner action required — review in WPCode admin |
+| 6 | Post excerpt | ✅ Plain-text marketing blurb |
+
+### UX Decisions Pending Confirmation (from 2.8.2 Blueprint)
+
+| # | Decision | Proposed |
+|---|---|---|
+| A | Accordion: multi-open | Yes |
+| B | Accordion: all closed by default | Yes |
+| C | Button label | "Add to Bag" |
+| D | Product title as `<h1>` | Yes |
+| E | Quantity on mobile | Hidden |
+| F | Swatch touch target 44px on mobile | Yes |
+| G | Sticky summary (desktop) | Yes |
+| H | Size Guide link | Yes |
+| I | Network error state | Yes |
+
+### Milestone 2.8.2 — Blueprint (Complete)
+
+Full design specification in `.jedda/35_PRODUCT_SUMMARY_V2_BLUEPRINT.md` covering:
+- Plus Jakarta Sans type system: 4 weights (300/400/500/600), full scale, color tokens, uppercase rules
+- Spacing system: 8px base grid, 10 spacing tokens
+- Complete component specs: title, price, variant selector, swatches, ATC, Buy Now, accordion (all 4 panels)
+- All interaction states: default, hover, focus, active, disabled, loading, error, success
+- Animation philosophy: 120–280ms ease, no spring/bounce
+- Sticky summary (desktop), responsive rules, mobile behavior
+- Accessibility: WCAG AA contrast, keyboard nav, ARIA semantics, `<h1>` for product title
+- Complete CMS data map: every piece of content mapped to WC native / ACF / taxonomy / Options Page
+- Plugin directory restructure plan (before implementation)
+- 4 environment blockers documented
+
+### Environment Blockers (Open)
+
+1. **ACF Pro not installed** — must purchase and install on staging before Milestone 2.8.3
+2. **WPCode #11836 unnamed** — unknown PDP impact, must review before implementation
+3. **Sticky requires container flexbox audit** — floated Foundation columns may prevent sticky
+4. **`<h2>` vs `<h1>` for product title** — requires hook or template override
 
 ## Current Risks
 
-- Browser/CDP sessions have sometimes been unstable on staging.
-- Checkout/order/payment flows are not safe to test casually.
-- WPCode #11836 unnamed — unknown PDP impact.
-- PHP lint unavailable in local environment.
+- ACF Pro not yet purchased — blocks content migration phase
+- WPCode #11836 content unknown — may conflict with V2 elements
+- Sticky summary may require container layout change (float → flex)
+- Browser/CDP sessions have sometimes been unstable on staging
 
 ## Immediate Next Step
 
-Founder reviews and approves/redirects architecture decisions above.
-After approval → Milestone 2.8.2 (ACF install + font infrastructure, no visual changes yet).
+**Owner:** Purchase ACF Pro + review WPCode #11836 + confirm 9 UX decisions (see `.jedda/98_NEXT_ACTION.md`)  
+**Engineer:** After confirmations received → Milestone 2.8.3 (Foundation: plugin restructure + ACF + fonts + taxonomy)
