@@ -33,6 +33,10 @@ Record engineering work chronologically.
 - Reclassified the first PDP V2 visual attempt as failed, not successful.
 - Updated the plugin so PDP V2 is disabled by default and no longer auto-enables on `beta.jeddawear.com`.
 - Added `31_PRODUCT_PAGE_V2_VISUAL_RECOVERY.md` with recovery status, failure analysis, and the real Upscale PDP DOM selector map.
+- Added long-term project continuity documentation: root `README.md`, `96_ENGINEERING_INDEX.md`, `97_PROJECT_IDENTITY.md`, `98_NEXT_ACTION.md`, and `99_CURRENT_STATE.md`.
+- Added the New Conversation Startup Procedure for future AI engineers.
+- Updated PDP V2 workflow: all future Product Page V2 work must be component-by-component, starting with Gallery V2 only.
+- Added AI handoff summary covering completed work, failed work, architecture, current risks, current sprint status, immediate next milestone, and expected next output.
 - Recorded the likely observer-loop failure mode.
 - Established a safer event-based implementation path for the next PDP invalid-variant guard.
 - Added a kill-switch requirement for future staging frontend snippets before activation.
