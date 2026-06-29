@@ -1,7 +1,7 @@
 # Current State
 
 Status: Handoff source of truth.
-Last updated: 2026-06-29.
+Last updated: 2026-06-30.
 
 ## Repository
 
@@ -37,10 +37,11 @@ Sprint 2 PDP interactions (active on staging):
 - Milestone 2.3: PDP success feedback — Code Snippets ID `19`.
 
 Custom plugin:
-- `wp-content/plugins/jedda-commerce-ui` installed on staging, currently deactivated.
-- `pdp-v2.css` — Gallery V2 implementation (gallery-only, Upscale selectors).
+- `wp-content/plugins/jedda-commerce-ui` v0.2.0 — installed and **active** on staging.
+- `pdp-v21.css` — Gallery V2.1 (wider gallery, right thumbnail, breathing room).
+- `pdp-v23.css` — Typography tokens, Plus Jakarta Sans font-face, flex container, sticky summary.
 - `pdp-v2.js` — Mobile image counter (event-based, Slick afterChange).
-- PDP V2 disabled by default. Feature flag required to activate.
+- PDP V2 enabled on staging. Feature flag: `jedda_pdp_v2_enabled = 1`.
 
 ## Gallery V2.1 — Implemented, QA Complete, Awaiting Founder Approval
 
@@ -196,19 +197,77 @@ Full design specification in `.jedda/35_PRODUCT_SUMMARY_V2_BLUEPRINT.md` coverin
 
 ### Environment Blockers (Open)
 
-1. **ACF Pro not installed** — must purchase and install on staging before Milestone 2.8.3
+1. **ACF Pro not installed** — must purchase and install on staging before Milestone 2.8.4
 2. **WPCode #11836 unnamed** — unknown PDP impact, must review before implementation
-3. **Sticky requires container flexbox audit** — floated Foundation columns may prevent sticky
-4. **`<h2>` vs `<h1>` for product title** — requires hook or template override
+
+### Environment Blockers (Resolved in 2.8.3)
+
+3. ~~Sticky requires container flexbox audit~~ — **RESOLVED**: added `display: flex; align-items: flex-start; flex-wrap: wrap` to `.de-product-single__container--inner` under PDP V2 scope. Summary column is now `position: sticky`.
+4. ~~`<h2>` vs `<h1>` for product title~~ — **RESOLVED**: `woocommerce_locate_template` filter at priority 20 routes `single-product/title.php` to plugin's `templates/single-product/title.php` (renders `<h1>`). Upscale runs at priority 10 and is overridden.
+5. ~~LiteSpeed caching stale CSS~~ — **RESOLVED**: CSS renamed `pdp-v22.css` → `pdp-v23.css` (new filename = guaranteed fresh cache entry per permanent rule).
+
+## Milestone 2.8.3 — Foundation (Complete, Deployed)
+
+Completed 2026-06-30. All verified on staging.
+
+### Plugin Restructure (v0.1.x → v0.2.0)
+- `jedda-commerce-ui.php` rewritten as bootstrap-only file
+- Logic split into 6 class files in `includes/`:
+  - `class-pdp.php` — feature flag, `is_v2_request()`, body classes
+  - `class-assets.php` — enqueue CSS/JS, font preloads, LiteSpeed exclusions
+  - `class-taxonomy.php` — `jedda_badge` custom taxonomy
+  - `class-woocommerce.php` — ATC label, title tag filter, template override
+  - `class-acf-fields.php` — ACF field group placeholder (gated on ACF Pro)
+  - `class-acf-options.php` — ACF Options Page placeholder (gated on ACF Pro)
+- New directories: `templates/`, `acf-json/`
+
+### Fonts — Plus Jakarta Sans
+- Variable font (single WOFF2 per subset, covers weights 300–600)
+- 2 files: `PlusJakartaSans.woff2` (27KB latin) + `PlusJakartaSans-LatinExt.woff2` (21KB)
+- Preloaded in `<head>` via `wp_head` hook (priority 1)
+- `@font-face` declarations in `pdp-v23.css` with `font-weight: 300 600` range
+
+### CSS Tokens (pdp-v23.css)
+- `--jedda-font`: Plus Jakarta Sans
+- `--jedda-header-height`: 114px (measured on staging)
+- Spacing tokens: `--space-1` through `--space-10` (4px–40px, 8px base grid)
+- Transition tokens: 120ms / 180ms / 220ms / 280ms
+
+### jedda_badge Taxonomy
+- Registered on `product` post type
+- Terms: Pre-Order, New Arrival, Restocked, Limited Edition
+- Replaces WPCode badge snippets (#3613, #5163, #5152)
+- Rendering not yet implemented (2.8.5)
+
+### WooCommerce Filters
+- `woocommerce_product_single_add_to_cart_text` → "Add to Bag" ✅ verified
+- `woocommerce_locate_template` at priority 20 → routes `single-product/title.php` to plugin template → `<h1>` ✅ verified
+- Template file: `templates/single-product/title.php`
+
+### Sticky Summary
+- `.de-product-single__container--inner` now `display: flex; align-items: flex-start; flex-wrap: wrap` under PDP V2 scope
+- `.de-product-single__summary--philo` now `position: sticky; top: calc(114px + 24px)` at ≥1024px
+- Gallery V2.1 visually unchanged after flex change ✅ verified
+
+### Staging Verification (2026-06-30)
+| Check | Result |
+|---|---|
+| `body.jedda-pdp-v2` class | ✅ |
+| Plus Jakarta Sans fonts loaded | ✅ (2 FontFace entries) |
+| `pdp-v23.css` loading | ✅ |
+| Add to Bag label | ✅ |
+| Product title `<h1>` | ✅ |
+| Container `display: flex` | ✅ |
+| Summary `position: sticky` | ✅ |
+| `--jedda-header-height: 114px` | ✅ |
+| Gallery V2.1 intact | ✅ (847px width, images loading) |
 
 ## Current Risks
 
-- ACF Pro not yet purchased — blocks content migration phase
+- ACF Pro not yet purchased — blocks content migration phase (2.8.4)
 - WPCode #11836 content unknown — may conflict with V2 elements
-- Sticky summary may require container layout change (float → flex)
-- Browser/CDP sessions have sometimes been unstable on staging
 
 ## Immediate Next Step
 
-**Owner:** Purchase ACF Pro + review WPCode #11836 + confirm 9 UX decisions (see `.jedda/98_NEXT_ACTION.md`)  
-**Engineer:** After confirmations received → Milestone 2.8.3 (Foundation: plugin restructure + ACF + fonts + taxonomy)
+**Owner:** Purchase ACF Pro + review WPCode #11836 (see `.jedda/98_NEXT_ACTION.md`)  
+**Engineer (after ACF Pro installed):** Milestone 2.8.4 — Content Migration

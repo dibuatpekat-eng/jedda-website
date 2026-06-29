@@ -2,6 +2,54 @@
 
 Record engineering work chronologically.
 
+## 2026-06-30 — Milestone 2.8.3 — Foundation (Claude Code workspace)
+
+Plugin restructured from single-file to class-based architecture. Fonts added. Infrastructure deployed to staging. No visual changes to existing layout.
+
+### Plugin v0.1.x → v0.2.0
+
+New bootstrap-only main file. 6 class files extracted into `includes/`:
+- `class-pdp.php` — feature flag (`jedda_pdp_v2_enabled`), `is_v2_request()`, body classes `jedda-commerce-ui` + `jedda-pdp-v2`
+- `class-assets.php` — enqueue `pdp-v21.css`, `pdp-v23.css`, `pdp-v2.js`; font preloads in `<head>`; LiteSpeed CSS exclusion filter
+- `class-taxonomy.php` — `jedda_badge` taxonomy on `product` post type
+- `class-woocommerce.php` — ATC label "Add to Bag", `woocommerce_locate_template` at priority 20 for title `<h1>` override
+- `class-acf-fields.php` — placeholder, gated on ACF Pro
+- `class-acf-options.php` — placeholder, gated on ACF Pro
+
+New directories: `templates/single-product/` (title.php), `acf-json/`.
+
+### Fonts — Plus Jakarta Sans (Self-Hosted Variable Font)
+
+Google Fonts CSS2 API returns a single WOFF2 URL for all weights 300–600 — this is a variable font. Two files cover both subsets:
+- `PlusJakartaSans.woff2` — 27KB, latin, weights 300–600
+- `PlusJakartaSans-LatinExt.woff2` — 21KB, latin-ext, weights 300–600
+
+`@font-face` in `pdp-v23.css` uses `font-weight: 300 600` range syntax.
+
+### pdp-v23.css
+
+Replaces `pdp-v22.css` (LiteSpeed had cached the initial version of v22 before flex rules were added — advancing filename guaranteed fresh cache entry).
+
+Contents:
+- `@font-face` declarations (2 subsets)
+- CSS custom properties: `--jedda-font`, `--jedda-header-height: 114px`, spacing tokens `--space-1` through `--space-10`, transition tokens
+- `.de-product-single__container--inner { display: flex; align-items: flex-start; flex-wrap: wrap }` — enables sticky
+- `.de-product-single__summary--philo { position: sticky; top: calc(114px + 24px) }` at ≥1024px
+
+### Product Title `<h1>` Override
+
+`woocommerce_locate_template` filter at priority 20 (Upscale runs at priority 10). Routes `single-product/title.php` to `templates/single-product/title.php` which outputs `the_title('<h1 class="product_title entry-title">', '</h1>')`. Verified on staging: title is now `H1`.
+
+### Staging Verification
+
+All checks passed: body classes, fonts (2 entries), pdp-v23.css loaded, ATC label, H1 title, container flex, summary sticky, --jedda-header-height set, Gallery V2.1 intact (847px).
+
+### Discovered Blockers (Now Resolved)
+
+- LiteSpeed caches static plugin CSS with long `max-age` — `reload(true)` insufficient. Permanent mitigation: new CSS filename per update.
+- Foundation uses `float: left/right` on gallery/summary columns — parent must be `display: flex` for `position: sticky` to work. Fixed via `pdp-v23.css`.
+- Upscale renders product title as `h2` at `woocommerce_locate_template` priority 10. Fixed via plugin template override at priority 20.
+
 ## 2026-06-29 — Milestone 2.8.2 — Product Summary V2 Blueprint (Claude Code workspace)
 
 Complete design specification. No staging changes. No code written.
