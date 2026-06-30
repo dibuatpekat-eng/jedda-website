@@ -43,8 +43,8 @@ ssh jedda-staging "cd /home/u422677730/domains/jeddawear.com/public_html/beta &&
 
 ## Cleanup (Pending SSH)
 
-- **WPCode #13967** (ACF JSON Loader): Active workaround for `class-acf-fields.php` bug. Diagnostic `admin_notices` block already stripped (2026-06-30). Deactivate once SSH available and plugin code fixed.
-- **WPCode #13968** (pdp-v24 CSS override): Active workaround for LiteSpeed static file cache. Deactivate once SSH available and LiteSpeed cache purged. Note: LiteSpeed strips `?ver=` query strings from static files at the server level — version string bumps do NOT bust cache. Only new filenames or SSH cache purge work.
+- **WPCode #13967** (ACF JSON Loader): ✅ Deactivated (2026-06-30). Plugin code fixed — `function_exists('acf')` guard removed from `class-acf-fields.php`. `acf/settings/load_json` filter now registers correctly at plugin load time.
+- **WPCode #13968** (pdp-v24 CSS override): ✅ Deactivated (2026-06-30). LiteSpeed static cache confirmed cleared — server now serves correct `pdp-v24.css` (opacity 0.6). Note: LiteSpeed strips `?ver=` query strings from static files at the server level — version string bumps do NOT bust cache. Only new filenames work for cache busting on this host.
 
 ## Owner Actions Required (Content Entry)
 

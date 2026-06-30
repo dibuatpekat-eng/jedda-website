@@ -30,9 +30,6 @@ if (! defined('ABSPATH')) {
 class Jedda_ACF_Fields {
 
 	public static function init() {
-		if (! function_exists('acf')) {
-			return;
-		}
 		add_filter('acf/settings/load_json', array(__CLASS__, 'load_json_path'));
 	}
 
